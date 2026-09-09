@@ -1,10 +1,10 @@
 # Astro 项目自动构建 + 部署
 name: Deploy Astro Blog
 
-# push 到 master 分支时触发
+# push 到 main 分支时触发
 on:
   push:
-    branches: ["master"]
+    branches: ["main"]
 
 # 同一时间只允许一个部署任务
 # 新 push 会取消正在进行的旧任务
