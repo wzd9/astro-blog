@@ -1,4 +1,3 @@
-```yaml
 # Astro 项目自动构建 + 部署
 name: Deploy Astro Blog
 
@@ -79,4 +78,4 @@ jobs:
             ls -lah
 
             echo "==== deploy success ===="
-```
+
