@@ -1,0 +1,82 @@
+```yaml
+# Astro 项目自动构建 + 部署
+name: Deploy Astro Blog
+
+# push 到 dev 分支时触发
+on:
+  push:
+    branches: ["dev"]
+
+# 同一时间只允许一个部署任务
+# 新 push 会取消正在进行的旧任务
+concurrency:
+  group: deploy-astro-dev
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    # 使用 GitHub 提供的临时 Ubuntu 环境
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # 1. 拉取代码
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. 配置 Node.js 20，并缓存 npm 依赖
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # 3. 安装依赖
+      - name: Install dependencies
+        run: npm ci
+
+      # 4. 构建 Astro
+      - name: Build Astro
+        run: npm run build
+
+      # 5. 将 dist 上传到 Ubuntu
+      - name: Upload dist to server
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          port: ${{ secrets.SERVER_PORT }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+          # Astro 构建生成的 dist
+          source: "dist/*"
+
+          # Ubuntu 部署目录
+          target: "/home/wzd/servers/astro-blog/dist"
+
+          # 删除服务器上旧的文件
+          rm: true
+
+          timeout: 60s
+          command_timeout: 5m
+
+      # 6. SSH 登录 Ubuntu
+      - name: Verify deployment
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          port: ${{ secrets.SERVER_PORT }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+          script: |
+            set -e
+
+            echo "==== Astro deploy directory ===="
+
+            cd /home/wzd/servers/astro-blog/dist
+
+            ls -lah
+
+            echo "==== deploy success ===="
+```

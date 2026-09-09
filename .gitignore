@@ -13,9 +13,9 @@ yarn-error.log*
 pnpm-debug.log*
 
 
-# environment variables
+# environment variables（含密钥的本地变量不提交；.env.development / .env.production 仅存站点地址，需随仓库提交）
 .env
-.env.production
+.env.*.local
 
 # macOS-specific files
 .DS_Store

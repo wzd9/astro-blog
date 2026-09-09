@@ -6,44 +6,57 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<style>
+			.site-avatar {
+				height: 1.15em;
+				width: auto;
+				vertical-align: -0.28em;
+				border-radius: 6px;
+			}
+		</style>
 	</head>
 	<body>
 		<Header />
+
 		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
+			<h1><img src="/images/logo.png" alt="蜡笔小新" class="site-avatar" /> 欢迎来到我的网站！</h1>
+
 			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This template
-				serves as a lightweight, minimally-styled starting point for anyone looking to build a personal
-				website, blog, or portfolio with Astro.
+				你好，我是一名 Java 后端开发者，日常主要和
+				<strong>Java、Spring Boot、MySQL、Redis</strong>
+				打交道，业余时间喜欢折腾 Linux 服务器和各种自建服务。
 			</p>
+
 			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
+				这里是我的个人博客与技术文档站，基于
+				<a href="https://astro.build/">Astro</a>
+				构建，用来记录学习笔记、开发实践，以及日常踩坑后总结的解决方案。
 			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
+
+			<p>你可以在这里找到以下内容：</p>
+
 			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
+				<li>☕ Java 技术 —— Spring Boot、并发编程、Maven 等后端开发实践与经验总结</li>
+				<li>📝 技术博客 —— 记录开发过程中遇到的问题、排查思路与解决方案</li>
+				<li>📚 技术文档 —— 整理 Java、Linux、MySQL、Redis、Nginx、Docker 等系统性学习资料</li>
+				<li>💻 项目实践 —— 记录服务器部署、运维工具搭建以及各种折腾记录</li>
 			</ul>
+
 			<p>
-				Have fun! If you get stuck, remember to
-				<a href="https://docs.astro.build/">read the docs</a>
-				or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
+				网站内容正在持续完善中，后续会不断补充更多 Java 相关的文章和文档。
 			</p>
+
 			<p>
-				Looking for a blog template with a bit more personality? Check out
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a>
-				by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
+				如果你对这里的内容感兴趣，欢迎继续浏览
+				<a href="/blog/">博客</a>
+				和
+				<a href="/docs/">技术文档</a>。
 			</p>
 		</main>
+
 		<Footer />
 	</body>
 </html>

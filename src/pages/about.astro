@@ -4,60 +4,52 @@ import Layout from '../layouts/BlogPost.astro';
 ---
 
 <Layout
-	title="About Me"
-	description="Lorem ipsum dolor sit amet"
-	pubDate={new Date('August 08 2021')}
+	title="关于我"
+	description="关于本站和作者的介绍"
+	pubDate={new Date('2026-09-08')}
 	heroImage={AboutHeroImage}
 >
 	<p>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-		labore et dolore magna aliqua. Vitae ultricies leo integer malesuada nunc vel risus commodo
-		viverra. Adipiscing enim eu turpis egestas pretium. Euismod elementum nisi quis eleifend quam
-		adipiscing. In hac habitasse platea dictumst vestibulum. Sagittis purus sit amet volutpat. Netus
-		et malesuada fames ac turpis egestas. Eget magna fermentum iaculis eu non diam phasellus
-		vestibulum lorem. Varius sit amet mattis vulputate enim. Habitasse platea dictumst quisque
-		sagittis. Integer quis auctor elit sed vulputate mi. Dictumst quisque sagittis purus sit amet.
+		你好，我是一名 Java 后端开发者，平时主要从事服务端开发工作，日常技术栈以
+		<strong>Java、Spring Boot、MySQL、Redis</strong> 为主，也会接触到 Nginx、Docker、Linux
+		服务器运维等相关内容。
 	</p>
 
 	<p>
-		Morbi tristique senectus et netus. Id semper risus in hendrerit gravida rutrum quisque non
-		tellus. Habitasse platea dictumst quisque sagittis purus sit amet. Tellus molestie nunc non
-		blandit massa. Cursus vitae congue mauris rhoncus. Accumsan tortor posuere ac ut. Fringilla urna
-		porttitor rhoncus dolor. Elit ullamcorper dignissim cras tincidunt lobortis. In cursus turpis
-		massa tincidunt dui ut ornare lectus. Integer feugiat scelerisque varius morbi enim nunc.
-		Bibendum neque egestas congue quisque egestas diam. Cras ornare arcu dui vivamus arcu felis
-		bibendum. Dignissim suspendisse in est ante in nibh mauris. Sed tempus urna et pharetra pharetra
-		massa massa ultricies mi.
+		我喜欢把学到的东西整理成文字。一方面，写下来的过程能帮助自己把知识点真正理清；另一方面，
+		很多问题在网上搜索时，最有用的答案往往也来自别人记录的博客。所以我搭建了这个网站，
+		把自己的学习笔记、项目实践和踩坑记录沉淀下来，既方便日后查阅，也希望能帮到遇到同样问题的人。
 	</p>
 
-	<p>
-		Mollis nunc sed id semper risus in. Convallis a cras semper auctor neque. Diam sit amet nisl
-		suscipit. Lacus viverra vitae congue eu consequat ac felis donec. Egestas integer eget aliquet
-		nibh praesent tristique magna sit amet. Eget magna fermentum iaculis eu non diam. In vitae
-		turpis massa sed elementum. Tristique et egestas quis ipsum suspendisse ultrices. Eget lorem
-		dolor sed viverra ipsum. Vel turpis nunc eget lorem dolor sed viverra. Posuere ac ut consequat
-		semper viverra nam. Laoreet suspendisse interdum consectetur libero id faucibus. Diam phasellus
-		vestibulum lorem sed risus ultricies tristique. Rhoncus dolor purus non enim praesent elementum
-		facilisis. Ultrices tincidunt arcu non sodales neque. Tempus egestas sed sed risus pretium quam
-		vulputate. Viverra suspendisse potenti nullam ac tortor vitae purus faucibus ornare. Fringilla
-		urna porttitor rhoncus dolor purus non. Amet dictum sit amet justo donec enim.
-	</p>
+	<h2>这个网站</h2>
 
 	<p>
-		Mattis ullamcorper velit sed ullamcorper morbi tincidunt. Tortor posuere ac ut consequat semper
-		viverra. Tellus mauris a diam maecenas sed enim ut sem viverra. Venenatis urna cursus eget nunc
-		scelerisque viverra mauris in. Arcu ac tortor dignissim convallis aenean et tortor at. Curabitur
-		gravida arcu ac tortor dignissim convallis aenean et tortor. Egestas tellus rutrum tellus
-		pellentesque eu. Fusce ut placerat orci nulla pellentesque dignissim enim sit amet. Ut enim
-		blandit volutpat maecenas volutpat blandit aliquam etiam. Id donec ultrices tincidunt arcu. Id
-		cursus metus aliquam eleifend mi.
+		本站使用 <a href="https://astro.build/">Astro</a> 构建，文档部分基于
+		Starlight。网站分为两个部分：
 	</p>
 
+	<ul>
+		<li><a href="/blog/">博客</a>：记录具体的开发问题、排查思路和实践总结；</li>
+		<li><a href="/docs/">技术文档</a>：整理成体系的技术资料，目前以 Java 为主，后续会持续补充。</li>
+	</ul>
+
+	<h2>技术兴趣</h2>
+
+	<p>工作和折腾中比较关注的方向：</p>
+
+	<ul>
+		<li>Java 后端：Spring Boot、并发编程、JVM 调优</li>
+		<li>数据存储：MySQL、Redis</li>
+		<li>服务器运维：Linux、Nginx、Docker、FRP</li>
+		<li>各种自建服务：监控、推送、家庭虚拟化（Proxmox）等</li>
+	</ul>
+
+	<h2>联系我</h2>
+
 	<p>
-		Tempus quam pellentesque nec nam aliquam sem. Risus at ultrices mi tempus imperdiet. Id porta
-		nibh venenatis cras sed felis eget velit. Ipsum a arcu cursus vitae. Facilisis magna etiam
-		tempor orci eu lobortis elementum. Tincidunt dui ut ornare lectus sit. Quisque non tellus orci
-		ac. Blandit libero volutpat sed cras. Nec tincidunt praesent semper feugiat nibh sed pulvinar
-		proin gravida. Egestas integer eget aliquet nibh praesent tristique magna.
+		如果文章中有错误，或者你有不同的见解，欢迎交流。可以通过网站导航栏的社交链接找到我，
+		也可以在相关文章下留言讨论。
 	</p>
+
+	<p>感谢访问，祝你在这里有所收获！</p>
 </Layout>
