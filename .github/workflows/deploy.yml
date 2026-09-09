@@ -48,7 +48,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
 
           # Astro 构建生成的 dist 目录（末尾斜杠表示复制目录内容，递归包含所有子目录）
-          source: "dist/
+          source: "dist/"
 
           # Ubuntu 部署目录
           target: "/home/wzd/servers/astro-blog/dist"
