@@ -52,7 +52,7 @@ jobs:
 
           # Ubuntu 部署目录
           target: "/home/wzd/servers/astro-blog/dist"
-          
+
           # 去掉 dist 这一层路径
           strip_components: 1
 
@@ -77,6 +77,10 @@ jobs:
             echo "==== Astro deploy directory ===="
 
             ls -lah /home/wzd/servers/astro-blog/dist
+
+            echo "==== HTTP 健康检查 ===="
+            # 确认站点可访问；HTTP 200 才算部署成功
+            curl -fsS -o /dev/null -w "HTTP %{http_code}\n" https://blog.wzdboy.cn/
 
             echo "==== deploy success ===="
 
