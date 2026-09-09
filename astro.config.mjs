@@ -3,19 +3,20 @@
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import starlight from '@astrojs/starlight';
-import { defineConfig, fontProviders, loadEnv } from 'astro/config';
+import { loadEnv } from 'vite';
+import { defineConfig, fontProviders } from 'astro/config';
+
+// 按运行模式加载环境变量：
+//   npm run dev   → .env.development（SITE_URL=http://localhost:4321）
+//   npm run build → .env.production（SITE_URL=https://blog.wzdboy.cn）
+// site 用于 RSS / sitemap / canonical 等绝对 URL；站内跳转均为根相对路径，无需区分环境
+const mode = process.env.NODE_ENV || 'development';
+const env = loadEnv(mode, process.cwd(), '');
+const SITE_URL = env.SITE_URL || 'https://blog.wzdboy.cn';
 
 // https://astro.build/config
-export default defineConfig(({ mode }) => {
-	// 按运行模式加载环境变量：
-	//   npm run dev   → .env.development（SITE_URL=http://localhost:4321）
-	//   npm run build → .env.production（SITE_URL=https://blog.wzdboy.cn）
-	// site 用于 RSS / sitemap / canonical 等绝对 URL；站内跳转均为根相对路径，无需区分环境
-	const env = loadEnv(mode, process.cwd(), '');
-	const SITE_URL = env.SITE_URL ?? 'https://blog.wzdboy.cn';
-
-	return {
-		site: SITE_URL,
+export default defineConfig({
+	site: SITE_URL,
 	// 关闭智能标点，避免正文中的 --flag 被渲染成 en-dash、引号被转成弯引号
 	markdown: {
 		smartypants: false,
@@ -107,5 +108,4 @@ export default defineConfig(({ mode }) => {
 			},
 		},
 	],
-	};
 });

@@ -47,13 +47,13 @@ jobs:
           port: ${{ secrets.SERVER_PORT }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-          # Astro 构建生成的 dist
-          source: "dist/*"
+          # Astro 构建生成的 dist 目录（末尾斜杠表示复制目录内容，递归包含所有子目录）
+          source: "dist/"
 
           # Ubuntu 部署目录
           target: "/home/wzd/servers/astro-blog/dist"
 
-          # 删除服务器上旧的文件
+          # 删除服务器上旧的文件（部署期间有短暂 downtime，个人博客可接受）
           rm: true
 
           timeout: 60s
@@ -73,9 +73,11 @@ jobs:
 
             echo "==== Astro deploy directory ===="
 
-            cd /home/wzd/servers/astro-blog/dist
+            ls -lah /home/wzd/servers/astro-blog/dist
 
-            ls -lah
+            echo "==== HTTP 健康检查 ===="
+            # 确认站点可访问；HTTP 200 才算部署成功
+            curl -fsS -o /dev/null -w "HTTP %{http_code}\n" https://blog.wzdboy.cn/
 
             echo "==== deploy success ===="
 
