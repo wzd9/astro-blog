@@ -1,0 +1,141 @@
+---
+interface Heading {
+	slug: string;
+	text: string;
+	depth: number;
+}
+
+interface Props {
+	headings: Heading[];
+}
+
+const { headings = [] } = Astro.props;
+
+// 只显示 H2、H3
+const toc = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 3);
+---
+
+{
+	toc.length > 0 && (
+		<nav class="toc" aria-label="文章目录">
+			<div class="toc-title">📑 文章目录</div>
+
+			<ul class="toc-list">
+				{toc.map((heading) => (
+					<li class:list={[`depth-${heading.depth}`]}>
+						<a href={`#${heading.slug}`} data-slug={heading.slug}>{heading.text}</a>
+					</li>
+				))}
+			</ul>
+		</nav>
+	)
+}
+
+<style>
+	.toc {
+		position: sticky;
+		top: 5rem;
+		max-height: calc(100vh - 7rem);
+		overflow-y: auto;
+		font-size: 0.95rem;
+	}
+
+	.toc-title {
+		font-weight: 700;
+		font-size: 1rem;
+		color: rgb(var(--black));
+		margin-bottom: 0.9rem;
+		padding-bottom: 0.6rem;
+		border-bottom: 1px solid rgb(var(--gray-light));
+	}
+
+	.toc-list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		border-left: 2px solid rgb(var(--gray-light));
+	}
+
+	.toc-list li {
+		margin: 0;
+		line-height: 1.4;
+	}
+
+	.toc-list a {
+		display: block;
+		padding: 0.35rem 0 0.35rem 0.9rem;
+		margin-left: -2px;
+		color: rgb(var(--gray));
+		text-decoration: none;
+		border-left: 2px solid transparent;
+		transition: color 0.2s, border-color 0.2s;
+		word-break: break-word;
+	}
+
+	.toc-list a:hover {
+		color: var(--accent);
+		border-left-color: var(--accent);
+	}
+
+	.toc-list a.is-active {
+		color: var(--accent);
+		border-left-color: var(--accent);
+		font-weight: 600;
+	}
+
+	.toc-list li.depth-3 a {
+		padding-left: 1.8rem;
+		font-size: 0.85rem;
+	}
+
+	@media (max-width: 1100px) {
+		.toc {
+			display: none;
+		}
+	}
+
+	@media (max-width: 768px) {
+		.toc {
+			display: block;
+			position: static;
+			max-height: none;
+			margin: 1rem 1rem 2rem;
+			padding: 1rem 1.2rem;
+			background: #fff;
+			border: 1px solid rgb(var(--gray-light));
+			border-radius: 10px;
+			box-shadow: 0 2px 8px rgba(var(--gray), 10%);
+		}
+		.toc-title {
+			margin-bottom: 0.7rem;
+		}
+	}
+</style>
+
+<script>
+	// 滚动时高亮当前所在章节的目录项
+	const links = document.querySelectorAll<HTMLAnchorElement>('.toc-list a');
+	if (links.length > 0) {
+		const headingEls = Array.from(links)
+			.map((a) => document.getElementById(a.dataset.slug ?? ''))
+			.filter((el): el is HTMLElement => el !== null);
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					const id = entry.target.id;
+					const link = document.querySelector(`.toc-list a[data-slug="${id}"]`);
+					if (link) {
+						if (entry.isIntersecting) {
+							links.forEach((l) => l.classList.remove('is-active'));
+							link.classList.add('is-active');
+						}
+					}
+				});
+			},
+			{ rootMargin: '-80px 0px -70% 0px', threshold: 0 },
+		);
+
+		headingEls.forEach((el) => observer.observe(el));
+	}
+</script>
