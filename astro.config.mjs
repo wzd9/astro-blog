@@ -26,6 +26,57 @@ export default defineConfig({
 			title: '我的技术文档',
 			// dev 模式关闭 pagefind（避免 /pagefind/* 404 警告），build 模式开启（生成搜索索引）
 			pagefind: IS_PROD,
+			// 把博客页的主题选择同步到 Starlight Docs 页，以及让 Starlight 内置 ThemeSelect 的选择反向同步回博客页
+			head: [
+				{
+					tag: 'script',
+					attrs: { 'is:inline': true },
+					content: `
+						/* Starlight Docs 页 <-> 博客页 主题双向同步脚本
+						(() => {
+							const root = document.documentElement;
+
+							// 1) 把 Starlight 的 dataset.theme 同步到 html class（博客自定义 CSS 变量 + Giscus 都依赖这一套）
+							const syncFromDatasetToClass = (theme) => {
+								if (theme !== 'light' && theme !== 'dark') return;
+								root.classList.remove('light', 'dark');
+								root.classList.add(theme);
+								// 广播 themechange，供 Giscus 等订阅方接收
+								document.dispatchEvent(new CustomEvent('themechange', { detail: { theme } }));
+							};
+
+							const getStoredTheme = () => {
+								const sl = localStorage.getItem('starlight-theme');
+								if (sl === 'light' || sl === 'dark') return sl;
+								const legacy = localStorage.getItem('theme');
+								if (legacy === 'light' || legacy === 'dark') return legacy;
+								return null;
+							};
+
+							// 2) 监听 Starlight 内部 data-theme 变化（用户在 Docs 页点 ThemeSelect 下拉时触发）
+							new MutationObserver(() => {
+								syncFromDatasetToClass(root.dataset.theme);
+							}).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+
+							// 3) 首帧强制对齐：Starlight ThemeProvider 已先设置完 dataset.theme 后，把 class/事件补齐
+							syncFromDatasetToClass(root.dataset.theme);
+
+							// 4) 跨标签页 storage 事件：博客页改了主题，Docs 页立即同步刷新 UI 下拉选择器状态
+							window.addEventListener('storage', (e) => {
+								if (e.key !== 'starlight-theme' && e.key !== 'theme') return;
+								const stored = getStoredTheme();
+								const finalTheme = stored || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+								// 更新 dataset.theme（会被 MutationObserver 再同步到 class）
+								root.dataset.theme = finalTheme;
+								// 同步 Starlight 内置 ThemeSelect 的下拉选择（选 light/dark/auto 图标态）
+								if (typeof window.StarlightThemeProvider !== 'undefined') {
+									window.StarlightThemeProvider.updatePickers(stored || 'auto');
+								}
+							});
+						})();
+					`,
+				},
+			],
 			// Expressive Code 高亮配置：添加 mysql 语言支持
 			expressiveCode: {
 				shiki: {

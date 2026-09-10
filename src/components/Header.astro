@@ -25,7 +25,22 @@ import SearchModal from './SearchModal.astro';
 					></path>
 				</svg>
 				<span class="search-hint">搜索</span>
-				<kbd class="search-kbd">⌘K</kbd>
+				<!-- <kbd class="search-kbd">⌘K</kbd> -->
+			</button>
+			<!-- 日/夜模式切换 -->
+			<button
+				id="theme-toggle"
+				class="theme-toggle"
+				type="button"
+				aria-label="切换主题"
+				title="切换主题"
+			>
+				<svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true" width="20" height="20">
+					<path fill="currentColor" d="M12 4.5a1 1 0 0 1 1 1V7a1 1 0 1 1-2 0V5.5a1 1 0 0 1 1-1zm6.364 2.05a1 1 0 0 1 1.414 0l1.06 1.06a1 1 0 1 1-1.414 1.415l-1.06-1.06a1 1 0 0 1 0-1.414zM20 12a1 1 0 0 1-1 1h-1.5a1 1 0 1 1 0-2H19a1 1 0 0 1 1 1zm-2.05 6.364a1 1 0 0 1 0 1.414l-1.06 1.06a1 1 0 1 1-1.415-1.414l1.06-1.06a1 1 0 0 1 1.415 0zM12 18.5a1 1 0 0 1 1 1V21a1 1 0 1 1-2 0v-1.5a1 1 0 0 1 1-1zm-6.364-2.05a1 1 0 0 1 0 1.415l-1.06 1.06a1 1 0 1 1-1.414-1.414l1.06-1.06a1 1 0 0 1 1.414 0zM5.5 12a1 1 0 0 1-1 1H3a1 1 0 1 1 0-2h1.5a1 1 0 0 1 1 1zm2.05-6.364a1 1 0 0 1 1.414 0l1.06 1.06a1 1 0 0 1-1.414 1.414L7.55 7.05a1 1 0 0 1 0-1.414zM12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8z"/>
+				</svg>
+				<svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true" width="20" height="20">
+					<path fill="currentColor" d="M21.64 13a1 1 0 0 0-1.05-.14 8.05 8.05 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2 1 1 0 0 0-.37-1.25 1 1 0 0 0-1.25.15A10.21 10.21 0 0 0 2.84 6.6 10.33 10.33 0 0 0 6.18 17a10.22 10.22 0 0 0 10.65 2A10.12 10.12 0 0 0 23 9.47a1 1 0 0 0-.14-1.05 1 1 0 0 0-1.22.15z"/>
+				</svg>
 			</button>
 			<div class="social-links">
 				<a href="https://github.com/wzd9" target="_blank">
@@ -174,6 +189,54 @@ import SearchModal from './SearchModal.astro';
 			display: none;
 		}
 	}
+
+	/* 主题切换按钮 */
+	.theme-toggle {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 36px;
+		height: 36px;
+		padding: 0;
+		color: rgb(var(--gray));
+		background: #f4f4f5;
+		border: 1px solid rgb(var(--gray-light));
+		border-radius: 6px;
+		cursor: pointer;
+		transition: all 0.2s;
+		position: relative;
+	}
+	.theme-toggle:hover {
+		color: var(--accent);
+		border-color: var(--accent);
+		background: #eef1ff;
+	}
+	:root.dark .theme-toggle {
+		background: rgba(var(--gray-light), 0.5);
+	}
+	:root.dark .theme-toggle:hover {
+		background: rgba(var(--gray-light), 0.8);
+	}
+	.theme-toggle svg {
+		position: absolute;
+		transition: opacity 0.2s ease, transform 0.3s ease;
+	}
+	.theme-toggle .icon-sun {
+		opacity: 1;
+		transform: rotate(0deg) scale(1);
+	}
+	.theme-toggle .icon-moon {
+		opacity: 0;
+		transform: rotate(-90deg) scale(0.6);
+	}
+	:root.dark .theme-toggle .icon-sun {
+		opacity: 0;
+		transform: rotate(90deg) scale(0.6);
+	}
+	:root.dark .theme-toggle .icon-moon {
+		opacity: 1;
+		transform: rotate(0deg) scale(1);
+	}
 </style>
 
 <script>
@@ -182,4 +245,83 @@ import SearchModal from './SearchModal.astro';
 	btn?.addEventListener('click', () => {
 		document.dispatchEvent(new CustomEvent('open-search-modal'));
 	});
+
+	// 主题切换（与 Starlight Docs 页共用 storage key，实现跨页面同步）
+	const root = document.documentElement;
+	const themeToggle = document.getElementById('theme-toggle');
+
+	// Starlight 内置使用的 storage key（Starlight ThemeProvider / ThemeSelect 都读写这个）
+	const STARLIGHT_THEME_KEY = 'starlight-theme';
+	// 博客页老的 key（兼容旧数据，优先读 Starlight 标准 key）
+	const LEGACY_THEME_KEY = 'theme';
+
+	type Theme = 'light' | 'dark';
+	// Starlight 支持三态：'auto' | 'light' | 'dark'。博客按钮只做 light/dark 两态切换。
+	type SlTheme = 'auto' | Theme;
+
+	function applyTheme(theme: Theme) {
+		root.classList.remove('light', 'dark');
+		root.classList.add(theme);
+		// 与 Starlight 主题系统对齐：data-theme 属性（CSS 变量、图标都靠它）
+		root.setAttribute('data-theme', theme);
+		// sl-theme cookie（Starlight SSR 阶段也能读取）
+		try {
+			document.cookie = `sl-theme=${theme}; path=/; max-age=31536000; SameSite=Lax`;
+		} catch { /* ignore */ }
+		// 广播事件（Giscus 评论等组件订阅了 themechange）
+		document.dispatchEvent(new CustomEvent('themechange', { detail: { theme } }));
+		// 若页面里存在 Starlight 的 ThemeSelect，调用官方 API 同步其下拉 UI
+		try {
+			window.StarlightThemeProvider?.updatePickers(theme);
+		} catch { /* ignore */ }
+	}
+
+	function getStoredTheme(): Theme | null {
+		try {
+			// 1) 优先读 Starlight 标准 starlight-theme（可能存了 auto/light/dark）
+			const sl = localStorage.getItem(STARLIGHT_THEME_KEY) as SlTheme | null;
+			if (sl === 'light' || sl === 'dark') return sl;
+			// 2) 兼容老的 theme key（light/dark）
+			const legacy = localStorage.getItem(LEGACY_THEME_KEY);
+			if (legacy === 'light' || legacy === 'dark') return legacy;
+			// 3) 存的是 'auto' 或空 → 返回 null，让调用方走系统偏好
+		} catch { /* ignore */ }
+		return null;
+	}
+
+	function persistTheme(theme: Theme) {
+		try {
+			// Starlight 标准：选 light/dark 就写具体值，选 auto 就清空 key
+			localStorage.setItem(STARLIGHT_THEME_KEY, theme);
+			// 兼容旧的 theme key，避免切回老页面后丢选择
+			localStorage.setItem(LEGACY_THEME_KEY, theme);
+		} catch { /* ignore */ }
+	}
+
+	function getSystemTheme(): Theme {
+		return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+	}
+
+	function getCurrentTheme(): Theme {
+		return root.classList.contains('dark') ? 'dark' : 'light';
+	}
+
+	themeToggle?.addEventListener('click', () => {
+		const next: Theme = getCurrentTheme() === 'dark' ? 'light' : 'dark';
+		applyTheme(next);
+		persistTheme(next);
+	});
+
+	// 监听 localStorage 变化：在 Docs 页切了 Starlight 的主题，博客页也要立即同步
+	window.addEventListener('storage', (e) => {
+		if (e.key !== STARLIGHT_THEME_KEY && e.key !== LEGACY_THEME_KEY) return;
+		const stored = getStoredTheme();
+		applyTheme(stored ?? getSystemTheme());
+	});
+
+	// 若 BaseHead 中的预初始化脚本未执行（极端情况），在此兜底同步一次
+	if (!root.classList.contains('light') && !root.classList.contains('dark')) {
+		const stored = getStoredTheme();
+		applyTheme(stored ?? getSystemTheme());
+	}
 </script>

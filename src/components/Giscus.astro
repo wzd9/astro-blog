@@ -15,3 +15,20 @@
         crossorigin="anonymous"
         async>
 </script>
+
+<script is:inline>
+	// Giscus 主题跟随站点主题动态切换
+	document.addEventListener('themechange', (e) => {
+		const theme = e.detail?.theme;
+		if (!theme) return;
+		const iframe = document.querySelector('iframe.giscus-frame');
+		if (!iframe) return;
+		iframe.contentWindow?.postMessage({
+			giscus: {
+				setConfig: {
+					theme: theme === 'dark' ? 'dark' : 'light',
+				},
+			},
+		}, 'https://giscus.app');
+	});
+</script>
