@@ -2,7 +2,7 @@
 title: '服务器搭建'
 description: '记录二手 N100 迷你小主机搭建家庭服务器的全过程：硬件选购、Proxmox 虚拟化、整体架构规划与监控方案。'
 pubDate: '2026-08-17'
-heroImage: '../../assets/covers/home-server-setup.png'
+heroImage: '/src/assets/server.jpg'
 ---
 
  本文主要记录本地服务器的搭建，记录时间为2026年8月16号。服务器已经搭建完毕。
