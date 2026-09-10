@@ -17,13 +17,19 @@ type Heading = {
 type Props = CollectionEntry<'blog'>['data'] & {headings?: Heading[];};
 
 const { title, description, pubDate, updatedDate, heroImage, headings = [] } = Astro.props;
+
+// 是否有足够的目录项（H2/H3 至少 1 个），决定是否启用目录侧边栏布局
+const hasToc = headings.some((h) => h.depth >= 2 && h.depth <= 3);
 ---
 
 <html lang="zh-CN">
 	<head>
 		<BaseHead title={title} description={description} />
 		<style>
-			main {
+			/* 只有博客文章页（有目录）才覆盖 main 宽度，
+			   容纳正文 720px + 目录 260px + 间距；
+			   about 页等无目录页面保持 global.css 的 720px 居中 */
+			:global(body.has-toc main) {
 				width: calc(100% - 2em);
 				max-width: 100%;
 				margin: 0;
@@ -61,9 +67,8 @@ const { title, description, pubDate, updatedDate, heroImage, headings = [] } = A
 			.last-updated-on {
 				font-style: italic;
 			}
-			/* 文章正文 + 目录侧边栏布局：
-			   正文保持 720px 可读性，目录放在正文右侧的边距区域，
-			   不挤压正文宽度。两侧用 1fr 做弹性留白，使整体居中。
+			/* 文章正文 + 目录侧边栏布局（仅 has-toc 页面启用）：
+			   正文保持 720px 可读性，目录放在正文右侧的边距区域。
 			   align-items: stretch 让目录列拉伸到与正文等高，
 			   内部 sticky 目录才有空间"粘"在视口内。 */
 			.article-layout {
@@ -71,6 +76,8 @@ const { title, description, pubDate, updatedDate, heroImage, headings = [] } = A
 				grid-template-columns: minmax(0, 1fr) minmax(0, 720px) 260px minmax(0, 1fr);
 				gap: 0 2.5rem;
 				align-items: stretch;
+				max-width: 1280px;
+				margin: 0 auto;
 			}
 
 			.article-content {
@@ -78,6 +85,9 @@ const { title, description, pubDate, updatedDate, heroImage, headings = [] } = A
 				min-width: 0;
 				padding: 0 1em;
 				color: rgb(var(--gray-dark));
+			}
+			.article-content :global(p) {
+				margin-bottom: 2em;
 			}
 
 			.article-toc {
@@ -107,7 +117,7 @@ const { title, description, pubDate, updatedDate, heroImage, headings = [] } = A
 		</style>
 	</head>
 
-	<body>
+	<body class={hasToc ? 'has-toc' : ''}>
 		<Header />
 		<main>
 			<article>
@@ -131,15 +141,22 @@ const { title, description, pubDate, updatedDate, heroImage, headings = [] } = A
 					</div>
 				</div>
 
-				<div class="article-layout">
-					<div class="article-content">
-						<slot />
-					</div>
-
-					<aside class="article-toc">
-						<TableOfContents headings={headings} />
-					</aside>
-				</div>
+				{
+					hasToc ? (
+						<div class="article-layout">
+							<div class="article-content">
+								<slot />
+							</div>
+							<aside class="article-toc">
+								<TableOfContents headings={headings} />
+							</aside>
+						</div>
+					) : (
+						<div class="prose">
+							<slot />
+						</div>
+					)
+				}
 
 				<div class="prose">
 					<Giscus />

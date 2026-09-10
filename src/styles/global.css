@@ -139,3 +139,13 @@ hr {
 	/* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
 	white-space: nowrap;
 }
+
+/* 隐藏 Starlight 注入的全局浮动工具栏（页面底部 4 个按钮：主题切换/颜色/目录/设置）
+   此工具栏仅对 Starlight 文档页有意义，在博客首页/博客文章页等自定义页面完全无用 */
+:global(.sl-toolbar),
+:global(.starlight-toolbar),
+:global(.sl-page-tools),
+:global(sl-toolbar),
+:global(.floating-toolbar) {
+	display: none !important;
+}

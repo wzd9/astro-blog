@@ -11,19 +11,27 @@ import { defineConfig, fontProviders } from 'astro/config';
 //   npm run build → .env.production（SITE_URL=https://blog.wzdboy.cn）
 // site 用于 RSS / sitemap / canonical 等绝对 URL；站内跳转均为根相对路径，无需区分环境
 const mode = process.env.NODE_ENV || 'development';
+const IS_PROD = mode === 'production';
 const env = loadEnv(mode, process.cwd(), '');
 const SITE_URL = env.SITE_URL || 'https://blog.wzdboy.cn';
 
 // https://astro.build/config
 export default defineConfig({
 	site: SITE_URL,
-	// 关闭智能标点，避免正文中的 --flag 被渲染成 en-dash、引号被转成弯引号
-	markdown: {
-		smartypants: false,
+	devToolbar: {
+		enabled: false,
 	},
 	integrations: [
 		starlight({
 			title: '我的技术文档',
+			// dev 模式关闭 pagefind（避免 /pagefind/* 404 警告），build 模式开启（生成搜索索引）
+			pagefind: IS_PROD,
+			// Expressive Code 高亮配置：添加 mysql 语言支持
+			expressiveCode: {
+				shiki: {
+					bundledLangs: ['common', 'mysql'],
+				},
+			},
 			// 文档最终放在 /docs/ 下
 			// route: '/docs',
 			sidebar: [

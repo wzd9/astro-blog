@@ -35,6 +35,7 @@ jobs:
         run: npm ci
 
       # 4. 构建 Astro
+      #    Starlight 构建时自动生成 Pagefind 搜索索引（dist/pagefind/*），无需额外步骤
       - name: Build Astro
         run: npm run build
 
