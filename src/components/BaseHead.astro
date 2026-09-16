@@ -18,6 +18,34 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const { title, description, image = FallbackImage } = Astro.props;
 ---
 
+<!-- 主题预初始化脚本（必须放在最前，同步执行，避免白屏闪烁）
+     与 Starlight Docs 页共用 starlight-theme key，保证跨页首次加载就是正确主题。 -->
+<script is:inline>
+	(function () {
+		try {
+			var root = document.documentElement;
+			// 1) Starlight 标准 key（三态：auto / light / dark）
+			var sl = localStorage.getItem('starlight-theme');
+			// 2) 博客页老 key（二态：light / dark）
+			var legacy = localStorage.getItem('theme');
+			var theme;
+			if (sl === 'light' || sl === 'dark') {
+				theme = sl;
+			} else if (legacy === 'light' || legacy === 'dark') {
+				theme = legacy;
+			} else {
+				// sl 是 'auto' 或空，或两者都没存 → 跟随系统
+				theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+			}
+			root.classList.remove('light', 'dark');
+			root.classList.add(theme);
+			root.setAttribute('data-theme', theme);
+		} catch (e) {
+			/* ignore */
+		}
+	})();
+</script>
+
 <!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />

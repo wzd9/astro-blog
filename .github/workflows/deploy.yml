@@ -1,11 +1,10 @@
-```yaml
 # Astro 项目自动构建 + 部署
 name: Deploy Astro Blog
 
-# push 到 dev 分支时触发
+# push 到 main 分支时触发
 on:
   push:
-    branches: ["dev"]
+    branches: ["main"]
 
 # 同一时间只允许一个部署任务
 # 新 push 会取消正在进行的旧任务
@@ -28,7 +27,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       # 3. 安装依赖
@@ -36,6 +35,7 @@ jobs:
         run: npm ci
 
       # 4. 构建 Astro
+      #    Starlight 构建时自动生成 Pagefind 搜索索引（dist/pagefind/*），无需额外步骤
       - name: Build Astro
         run: npm run build
 
@@ -48,13 +48,16 @@ jobs:
           port: ${{ secrets.SERVER_PORT }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-          # Astro 构建生成的 dist
+          # Astro 构建生成的 dist 目录（末尾斜杠表示复制目录内容，递归包含所有子目录）
           source: "dist/*"
 
           # Ubuntu 部署目录
           target: "/home/wzd/servers/astro-blog/dist"
 
-          # 删除服务器上旧的文件
+          # 去掉 dist 这一层路径
+          strip_components: 1
+
+          # 删除服务器上旧的文件（部署期间有短暂 downtime，个人博客可接受）
           rm: true
 
           timeout: 60s
@@ -74,9 +77,11 @@ jobs:
 
             echo "==== Astro deploy directory ===="
 
-            cd /home/wzd/servers/astro-blog/dist
+            ls -lah /home/wzd/servers/astro-blog/dist
 
-            ls -lah
+            echo "==== HTTP 健康检查 ===="
+            # 确认站点可访问；HTTP 200 才算部署成功
+            curl -fsS -o /dev/null -w "HTTP %{http_code}\n" https://blog.wzdboy.cn/
 
             echo "==== deploy success ===="
-```
+

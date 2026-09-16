@@ -1,9 +1,8 @@
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
-import { docsLoader } from '@astrojs/starlight/loaders';
-import { docsSchema } from '@astrojs/starlight/schema';
+import { docsLoader, i18nLoader } from '@astrojs/starlight/loaders';
+import { docsSchema, i18nSchema } from '@astrojs/starlight/schema';
 import { z } from 'astro/zod';
-
 
 const blog = defineCollection({
 	// Load Markdown and MDX files in the `src/content/blog/` directory.
@@ -25,5 +24,10 @@ const docs = defineCollection({
 	schema: docsSchema(),
 });
 
+// Starlight 内部引用 i18n collection，定义一个空的来消除警告
+const i18n = defineCollection({
+	loader: i18nLoader(),
+	schema: i18nSchema(),
+});
 
-export const collections = { blog, docs };
+export const collections = { blog, docs, i18n };

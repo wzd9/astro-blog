@@ -16,6 +16,34 @@
 		0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%),
 		0 16px 32px rgba(var(--gray), 33%);
 }
+@media (prefers-color-scheme: dark) {
+	:root:not(.light) {
+		color-scheme: dark;
+		--accent: #6c7bff;
+		--accent-dark: #9aa6ff;
+		--black: 240, 244, 255;
+		--gray: 164, 178, 207;
+		--gray-light: 48, 54, 71;
+		--gray-dark: 214, 222, 240;
+		--gray-gradient: rgba(30, 34, 46, 85%), #0b0d14;
+		--box-shadow:
+			0 2px 6px rgba(0, 0, 0, 40%), 0 8px 24px rgba(0, 0, 0, 45%),
+			0 16px 32px rgba(0, 0, 0, 50%);
+	}
+}
+:root.dark {
+	color-scheme: dark;
+	--accent: #6c7bff;
+	--accent-dark: #9aa6ff;
+	--black: 240, 244, 255;
+	--gray: 164, 178, 207;
+	--gray-light: 48, 54, 71;
+	--gray-dark: 214, 222, 240;
+	--gray-gradient: rgba(30, 34, 46, 85%), #0b0d14;
+	--box-shadow:
+		0 2px 6px rgba(0, 0, 0, 40%), 0 8px 24px rgba(0, 0, 0, 45%),
+		0 16px 32px rgba(0, 0, 0, 50%);
+}
 body {
 	font-family: var(--font-atkinson);
 	margin: 0;
@@ -28,6 +56,15 @@ body {
 	color: rgb(var(--gray-dark));
 	font-size: 20px;
 	line-height: 1.7;
+	transition: background 0.25s ease, color 0.25s ease;
+}
+@media (prefers-color-scheme: dark) {
+	:root:not(.light) body {
+		background-color: #0b0d14;
+	}
+}
+:root.dark body {
+	background-color: #0b0d14;
 }
 main {
 	width: 720px;
@@ -138,4 +175,14 @@ hr {
 	clip-path: inset(50%);
 	/* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
 	white-space: nowrap;
+}
+
+/* 隐藏 Starlight 注入的全局浮动工具栏（页面底部 4 个按钮：主题切换/颜色/目录/设置）
+   此工具栏仅对 Starlight 文档页有意义，在博客首页/博客文章页等自定义页面完全无用 */
+:global(.sl-toolbar),
+:global(.starlight-toolbar),
+:global(.sl-page-tools),
+:global(sl-toolbar),
+:global(.floating-toolbar) {
+	display: none !important;
 }
