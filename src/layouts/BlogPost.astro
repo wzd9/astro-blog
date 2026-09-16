@@ -144,12 +144,12 @@ const hasToc = headings.some((h) => h.depth >= 2 && h.depth <= 3);
 				{
 					hasToc ? (
 						<div class="article-layout">
-							<div class="article-content">
-								<slot />
-							</div>
 							<aside class="article-toc">
 								<TableOfContents headings={headings} />
 							</aside>
+							<div class="article-content">
+								<slot />
+							</div>
 						</div>
 					) : (
 						<div class="prose">
@@ -166,4 +166,3 @@ const hasToc = headings.some((h) => h.depth >= 2 && h.depth <= 3);
 		<Footer />
 	</body>
 </html>
-
