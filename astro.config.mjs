@@ -94,7 +94,21 @@ export default defineConfig({
 					label: 'Java',
 					items: [
 						{ label: 'Java 简介', link: '/docs/java/' },
-						{ label: 'Java 基础', link: '/docs/java/basics/' },
+						{
+							label: 'Java 基础',
+							items: [
+								{ label: '基础概览', link: '/docs/java/basics/' },
+								{
+									label: '集合与并发',
+									items: [
+										{
+											label: 'Java 并发包（JUC）技术学习指南',
+											link: '/docs/java/basics/collections-concurrency/',
+										},
+									],
+								},
+							],
+						},
 						{ label: 'Spring Boot', link: '/docs/java/spring-boot/' },
 						{ label: 'Maven', link: '/docs/java/maven/' },
 						{ label: 'Maven 私服（Nexus）', link: '/docs/java/maven-nexus/' },
