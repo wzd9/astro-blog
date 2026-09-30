@@ -5,7 +5,7 @@ pubDate: '2026-09-29'
 heroImage: '/src/assets/IMG_6471.png'
 ---
 
-之前的[服务器搭建文章](/blog/home-server-setup/)以 FRP 作为家庭服务器与公网服务器之间的主要通道：阿里云 Nginx 接收请求，再通过 FRPS/FRPC 转发到家中的 PVE 和 Ubuntu 虚拟机。这个方案能够快速解决没有公网 IP 的问题，但随着服务变多，继续为 PVE、数据库或其他管理服务增加映射端口，会扩大公网暴露面。
+之前的[服务器搭建](/blog/home-server-setup/)文章以 FRP 作为家庭服务器与公网服务器之间的主要通道：阿里云 Nginx 接收请求，再通过 FRPS/FRPC 转发到家中的 PVE 和 Ubuntu 虚拟机。这个方案能够快速解决没有公网 IP 的问题，但随着服务变多，继续为 PVE、数据库或其他管理服务增加映射端口，会扩大公网暴露面。
 
 这次调整的重点不是“彻底移除 FRP”，而是给两类访问分工：**需要给普通访客使用的服务走公网入口；只有自己和受信任设备需要访问的管理服务走 WireGuard VPN。** 家庭网络与阿里云通过 WireGuard 组成一个受控网络，FRP 则只保留给 GitHub Actions 自动部署使用的通道。
 
