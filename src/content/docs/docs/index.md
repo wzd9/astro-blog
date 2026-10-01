@@ -46,10 +46,12 @@ Java 后端开发相关的概念、框架与构建工具：
 - [Linux](/docs/linux/) —— 常用命令、systemd、网络与磁盘
 - [Ubuntu](/docs/ubuntu/) —— 服务器初始化与软件安装
 - [FRP 内网穿透](/docs/ops/frp/) —— 服务端与客户端配置，内网服务公网暴露
+- [使用 WireGuard 进行组网](/docs/ops/wireguard-networking/) —— 云端 Hub、家庭侧 Peer、客户端与家庭 LAN 路由
 - [Uptime Kuma 安装](/docs/ops/uptime-kuma/) —— 服务可用性监控中心部署
 - [Bark Server 安装](/docs/ops/bark-server/) —— iPhone 消息推送服务部署
 - [CentOS8 防火墙指令](/docs/ops/firewall/) —— firewalld 常用命令备忘
 - [Hexo 命令](/docs/ops/hexo-commands/) —— Hexo 博客常用命令备忘
+- [Wiregurad 组网](/docs/ops/wireguard-networking/) —— wireguard 组网
 
 后续计划补充：Java 并发编程、MyBatis、Spring Cloud、Proxmox 虚拟化等内容。
 
