@@ -1,8 +1,53 @@
 ---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+
+const posts = (await getCollection('blog'))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 4);
+
+const techStack = [
+	{ icon: '☕', name: 'Java' },
+	{ icon: '🍃', name: 'Spring Boot' },
+	{ icon: '🐬', name: 'MySQL' },
+	{ icon: '⚡', name: 'Redis' },
+	{ icon: '🐧', name: 'Linux' },
+	{ icon: '🌐', name: 'Nginx' },
+	{ icon: '🐳', name: 'Docker' },
+	{ icon: '🖥️', name: 'Proxmox' },
+];
+
+const projects = [
+	{
+		icon: '🚀',
+		name: 'Astro Blog',
+		desc: '基于 Astro + Starlight 打造的个人博客，专注于技术分享与知识沉淀。',
+		tags: ['Astro', 'Markdown', 'Blog'],
+	},
+	{
+		icon: '🏠',
+		name: 'Homelab',
+		desc: '基于 Proxmox VE 的家庭服务器集群，运行各类服务与应用。',
+		tags: ['Proxmox', 'Linux', 'Docker'],
+	},
+	{
+		icon: '🎵',
+		name: 'Media Server',
+		desc: 'Navidrome + FFmpeg，打造个人音乐服务器。',
+		tags: ['Navidrome', 'FFmpeg', 'Music'],
+	},
+	{
+		icon: '🔐',
+		name: 'Vaultwarden',
+		desc: '自建密码管理服务，支持 HTTPS 与 WireGuard 访问。',
+		tags: ['Rust', 'Nginx', 'Security'],
+	},
+];
 ---
 
 <!doctype html>
@@ -10,11 +55,357 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
 		<style>
-			.site-avatar {
-				height: 1.15em;
-				width: auto;
-				vertical-align: -0.28em;
-				border-radius: 6px;
+			main {
+				width: 1100px;
+				font-size: 16px;
+			}
+			section {
+				margin-bottom: 4rem;
+			}
+
+			/* ===== Hero（全宽背景图，按比例完整显示不裁剪） ===== */
+			.hero {
+				position: relative;
+				width: 100vw;
+				margin: -3em 0 4rem calc(50% - 50vw);
+				aspect-ratio: 2363 / 1080;
+				background: url('/images/head-bg.PNG') center top / 100% auto no-repeat;
+			}
+			.hero::before {
+				content: '';
+				position: absolute;
+				inset: 0;
+				background:
+					linear-gradient(to bottom, rgba(255, 255, 255, 0) 80%, rgba(255, 255, 255, 0.95) 100%),
+					linear-gradient(
+						100deg,
+						rgba(255, 255, 255, 0.85) 0%,
+						rgba(255, 255, 255, 0.45) 40%,
+						rgba(255, 255, 255, 0.05) 65%,
+						rgba(255, 255, 255, 0) 80%
+					);
+			}
+			:root.dark .hero::before {
+				background:
+					linear-gradient(to bottom, rgba(11, 13, 20, 0) 80%, rgba(11, 13, 20, 0.95) 100%),
+					linear-gradient(
+						100deg,
+						rgba(11, 13, 20, 0.88) 0%,
+						rgba(11, 13, 20, 0.5) 40%,
+						rgba(11, 13, 20, 0.1) 65%,
+						rgba(11, 13, 20, 0) 80%
+					);
+			}
+			.hero-inner {
+				position: relative;
+				height: 100%;
+				max-width: 1100px;
+				margin: 0 auto;
+				padding: 0 1rem;
+				display: grid;
+				grid-template-columns: 1.2fr 1fr;
+				align-content: center;
+				gap: 2rem;
+			}
+			.hero-hello {
+				margin: 0 0 0.25rem;
+				color: rgb(var(--gray-dark));
+				font-size: 1rem;
+			}
+			.hero-name {
+				margin: 0 0 0.75rem;
+				font-size: 4rem;
+				font-weight: 800;
+				letter-spacing: 0.02em;
+				color: rgb(var(--black));
+			}
+			.hero-name em {
+				font-style: normal;
+				color: var(--accent);
+			}
+			.hero-role {
+				margin: 0 0 1.25rem;
+				font-size: 1.05rem;
+				font-weight: 600;
+				color: rgb(var(--gray-dark));
+			}
+			.hero-desc {
+				margin: 0 0 1.75rem;
+				color: rgb(var(--gray));
+				font-size: 0.95rem;
+				line-height: 1.8;
+			}
+			.hero-actions {
+				display: flex;
+				gap: 0.75rem;
+				flex-wrap: wrap;
+			}
+			.btn {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.4rem;
+				padding: 0.6em 1.3em;
+				border-radius: 8px;
+				font-size: 0.9rem;
+				font-weight: 600;
+				text-decoration: none;
+				border: 1px solid rgb(var(--gray-light));
+				background: rgba(255, 255, 255, 0.75);
+				color: rgb(var(--gray-dark));
+				transition: all 0.2s ease;
+			}
+			:root.dark .btn {
+				background: rgba(30, 34, 46, 0.7);
+			}
+			.btn:hover {
+				border-color: var(--accent);
+				color: var(--accent);
+				transform: translateY(-2px);
+			}
+			.btn-primary {
+				background: var(--accent);
+				border-color: var(--accent);
+				color: #fff;
+			}
+			.btn-primary:hover {
+				background: var(--accent-dark);
+				border-color: var(--accent-dark);
+				color: #fff;
+			}
+
+			/* 右上角诗句 */
+			.hero-poem {
+				align-self: start;
+				justify-self: end;
+				text-align: right;
+				font-family: 'Songti SC', 'STSong', 'SimSun', serif;
+				color: rgb(var(--gray-dark));
+			}
+			.hero-poem .line {
+				margin: 0;
+				font-size: 1.05rem;
+				letter-spacing: 0.12em;
+				line-height: 2;
+			}
+			.hero-poem .from {
+				margin: 0.6rem 0 0;
+				font-size: 0.78rem;
+				color: rgb(var(--gray));
+			}
+
+			/* Hero 底部技术标签 */
+			.hero-chips {
+				grid-column: 1 / -1;
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.6rem;
+				margin-top: 2.25rem;
+			}
+			.chip {
+				display: inline-flex;
+				align-items: center;
+				gap: 0.35rem;
+				padding: 0.35em 0.95em;
+				font-size: 0.78rem;
+				border-radius: 999px;
+				border: 1px solid rgba(var(--gray-light), 0.9);
+				background: rgba(255, 255, 255, 0.7);
+				color: rgb(var(--gray-dark));
+				backdrop-filter: blur(4px);
+			}
+			:root.dark .chip {
+				background: rgba(30, 34, 46, 0.7);
+			}
+
+			/* ===== 区块标题 ===== */
+			.section-title {
+				display: flex;
+				align-items: baseline;
+				justify-content: space-between;
+				margin-bottom: 1.5rem;
+			}
+			.section-title h2 {
+				margin: 0;
+				font-size: 1.5rem;
+			}
+			.section-title .sub {
+				margin: 0.35rem 0 0;
+				color: rgb(var(--gray));
+				font-size: 0.85rem;
+			}
+			.section-more {
+				font-size: 0.85rem;
+				text-decoration: none;
+				white-space: nowrap;
+			}
+
+			/* ===== 文章 / 项目卡片 ===== */
+			.card-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+				gap: 1.25rem;
+			}
+			.post-card,
+			.project-card {
+				display: flex;
+				flex-direction: column;
+				border: 1px solid rgb(var(--gray-light));
+				border-radius: 14px;
+				overflow: hidden;
+				text-decoration: none;
+				background: rgba(var(--gray-light), 0.15);
+				transition:
+					box-shadow 0.2s ease,
+					transform 0.2s ease,
+					border-color 0.2s ease;
+			}
+			.post-card:hover,
+			.project-card:hover {
+				box-shadow: var(--box-shadow);
+				transform: translateY(-3px);
+				border-color: var(--accent);
+			}
+			.post-card :global(.cover) {
+				aspect-ratio: 16 / 8;
+				width: 100%;
+			}
+			.post-card :global(img) {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+			.cover-fallback {
+				width: 100%;
+				height: 100%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 0 1rem;
+				background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 60%, #0ea5e9 100%);
+			}
+			.cover-fallback code {
+				background: none;
+				font-family: 'JetBrains Mono', Consolas, monospace;
+				color: rgba(255, 255, 255, 0.9);
+				font-size: 0.9rem;
+				text-align: center;
+			}
+			.card-body {
+				padding: 1.1rem 1.25rem 1.25rem;
+				display: flex;
+				flex-direction: column;
+				gap: 0.45rem;
+				flex: 1;
+			}
+			.card-body h3 {
+				margin: 0;
+				font-size: 1rem;
+				line-height: 1.4;
+				color: rgb(var(--black));
+			}
+			.post-card:hover h3 {
+				color: var(--accent);
+			}
+			.card-body .desc {
+				margin: 0;
+				color: rgb(var(--gray));
+				font-size: 0.82rem;
+				line-height: 1.6;
+				display: -webkit-box;
+				-webkit-line-clamp: 2;
+				-webkit-box-orient: vertical;
+				overflow: hidden;
+			}
+			.card-date {
+				margin: auto 0 0;
+				font-size: 0.78rem;
+				color: rgb(var(--gray));
+			}
+
+			.project-card {
+				padding: 1.25rem;
+				gap: 0.6rem;
+			}
+			.project-head {
+				display: flex;
+				align-items: center;
+				gap: 0.6rem;
+			}
+			.project-head .icon {
+				font-size: 1.4rem;
+			}
+			.project-head h3 {
+				margin: 0;
+				font-size: 1rem;
+				color: rgb(var(--black));
+			}
+			.project-card .desc {
+				margin: 0;
+				color: rgb(var(--gray));
+				font-size: 0.82rem;
+				line-height: 1.6;
+			}
+			.tag-row {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.4rem;
+				margin-top: auto;
+				padding-top: 0.4rem;
+			}
+			.tag {
+				padding: 0.15em 0.6em;
+				font-size: 0.72rem;
+				border-radius: 999px;
+				background: rgba(var(--gray-light), 0.6);
+				color: rgb(var(--gray));
+			}
+
+			/* ===== 关于我 ===== */
+			.about {
+				border: 1px solid rgb(var(--gray-light));
+				border-radius: 16px;
+				padding: 2rem 2.25rem;
+				background: rgba(var(--gray-light), 0.15);
+			}
+			.about p {
+				margin: 0 0 1rem;
+				color: rgb(var(--gray-dark));
+				font-size: 0.95rem;
+				line-height: 1.9;
+			}
+			.about p:last-child {
+				margin-bottom: 0;
+			}
+
+			@media (max-width: 860px) {
+				.hero {
+					aspect-ratio: auto;
+					background-size: cover;
+					background-position: center;
+				}
+				.hero-inner {
+					grid-template-columns: 1fr;
+					gap: 1.5rem;
+					padding: 4rem 1rem 3rem;
+				}
+				.hero-poem {
+					justify-self: start;
+					text-align: left;
+				}
+				.hero-name {
+					font-size: 2.6rem;
+				}
+			}
+			@media (max-width: 720px) {
+				main {
+					padding: 1em;
+				}
+				.hero {
+					margin-top: -1em;
+				}
+				section {
+					margin-bottom: 3rem;
+				}
 			}
 		</style>
 	</head>
@@ -22,39 +413,120 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 		<Header />
 
 		<main>
-			<h1><img src="/images/logo.png" alt="蜡笔小新" class="site-avatar" /> 欢迎来到我的网站！</h1>
+			<section class="hero">
+				<div class="hero-inner">
+					<div>
+						<p class="hero-hello">你好，我是</p>
+						<h1 class="hero-name">wzd9</h1>
+						<p class="hero-role">Java 后端开发者 · 技术探索者 · Homelab 爱好者</p>
+						<p class="hero-desc">
+							专注于 Java、Spring Boot、MySQL、Redis、Linux 以及自建服务，
+							用技术记录生活，用代码创造价值。
+						</p>
+						<div class="hero-actions">
+							<a class="btn btn-primary" href="/blog/">📖 查看博客 →</a>
+							<a class="btn" href="/docs/">📚 技术文档</a>
+							<a class="btn" href="https://github.com/wzd9" target="_blank">GitHub</a>
+						</div>
+					</div>
+					<div class="hero-poem">
+						<p class="line">飞光飞光</p>
+						<p class="line">劝尔一杯酒</p>
+						<!-- <p class="from">—— 李贺《苦昼短》</p> -->
+					</div>
+					<div class="hero-chips">
+						{
+							techStack.map((t) => (
+								<span class="chip">
+									{t.icon} {t.name}
+								</span>
+							))
+						}
+						<span class="chip">➕ 更多…</span>
+					</div>
+				</div>
+			</section>
 
-			<p>
-				你好，我是一名 Java 后端开发者，日常主要和
-				<strong>Java、Spring Boot、MySQL、Redis</strong>
-				打交道，业余时间喜欢折腾 Linux 服务器和各种自建服务。
-			</p>
+			<!-- ===== 最新文章 ===== -->
+			<section>
+				<div class="section-title">
+					<div>
+						<h2>最新文章</h2>
+					</div>
+					<a class="section-more" href="/blog/">查看更多 →</a>
+				</div>
+				<div class="card-grid">
+					{
+						posts.map((post) => (
+							<a class="post-card" href={`/blog/${post.id}/`}>
+								<div class="cover">
+									{post.data.heroImage ? (
+										<Image width={480} height={240} src={post.data.heroImage} alt={post.data.title} />
+									) : (
+										<div class="cover-fallback">
+											<code>{post.data.title}</code>
+										</div>
+									)}
+								</div>
+								<div class="card-body">
+									<h3>{post.data.title}</h3>
+									<p class="desc">{post.data.description}</p>
+									<p class="card-date">
+										<FormattedDate date={post.data.pubDate} />
+									</p>
+								</div>
+							</a>
+						))
+					}
+				</div>
+			</section>
 
-			<p>
-				这里是我的个人博客与技术文档站，基于
-				<a href="https://astro.build/">Astro</a>
-				构建，用来记录学习笔记、开发实践，以及日常踩坑后总结的解决方案。
-			</p>
+			<!-- ===== 我的项目 ===== -->
+			<section>
+				<div class="section-title">
+					<div>
+						<h2>我的项目</h2>
+					</div>
+				</div>
+				<div class="card-grid">
+					{
+						projects.map((p) => (
+							<div class="project-card">
+								<div class="project-head">
+									<span class="icon">{p.icon}</span>
+									<h3>{p.name}</h3>
+								</div>
+								<p class="desc">{p.desc}</p>
+								<div class="tag-row">
+									{p.tags.map((tag) => (
+										<span class="tag">{tag}</span>
+									))}
+								</div>
+							</div>
+						))
+					}
+				</div>
+			</section>
 
-			<p>你可以在这里找到以下内容：</p>
-
-			<ul>
-				<li>☕ Java 技术 —— Spring Boot、并发编程、Maven 等后端开发实践与经验总结</li>
-				<li>📝 技术博客 —— 记录开发过程中遇到的问题、排查思路与解决方案</li>
-				<li>📚 技术文档 —— 整理 Java、Linux、MySQL、Redis、Nginx、Docker 等系统性学习资料</li>
-				<li>💻 项目实践 —— 记录服务器部署、运维工具搭建以及各种折腾记录</li>
-			</ul>
-
-			<p>
-				网站内容正在持续完善中，后续会不断补充更多 Java 相关的文章和文档。
-			</p>
-
-			<p>
-				如果你对这里的内容感兴趣，欢迎继续浏览
-				<a href="/blog/">博客</a>
-				和
-				<a href="/docs/">技术文档</a>。
-			</p>
+			<!-- ===== 关于我 ===== -->
+			<section>
+				<div class="section-title">
+					<div>
+						<h2>关于我</h2>
+					</div>
+					<a class="section-more" href="/about/">更多 →</a>
+				</div>
+				<div class="about">
+					<p>
+						我是一名 Java 后端开发者，工作中主要关注后端服务开发、数据库设计与系统性能优化；
+						业余时间喜欢折腾 Linux 服务器、搭建个人服务、研究开源项目。
+					</p>
+					<p>
+						这个网站用于记录学习过程，也作为自己的技术知识库。正如李贺所写——「飞光飞光，劝尔一杯酒」，
+						时光飞逝，唯有持续记录，方能不负热爱。
+					</p>
+				</div>
+			</section>
 		</main>
 
 		<Footer />
