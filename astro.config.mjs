@@ -150,6 +150,7 @@ export default defineConfig({
 						{ label: 'Bark Server 安装', link: '/docs/ops/bark-server/' },
 						{ label: 'CentOS8 防火墙指令', link: '/docs/ops/firewall/' },
 						{ label: 'Hexo 命令', link: '/docs/ops/hexo-commands/' },
+						{ label: 'Wiregurad 组网', link: '/docs/ops/wireguard-networking/' },
 					],
 				},
 			],
