@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" role="img" aria-labelledby="title desc">
+  <title id="title">WireGuard 家庭服务器架构示意</title>
+  <desc id="desc">公开访客通过云端 Nginx 访问公开网站；可信设备通过 WireGuard 进入家庭 LAN；N150 运行 PVE 和 Ubuntu 应用虚拟机，N100 运行 PBS；GitHub Actions 通过 FRP 向 Ubuntu 部署服务传送部署包。</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f8fbff"/><stop offset="1" stop-color="#eef4fb"/></linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#eff6ff"/><stop offset="1" stop-color="#dbeafe"/></linearGradient>
+    <linearGradient id="green" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f0fdf4"/><stop offset="1" stop-color="#dcfce7"/></linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="5" stdDeviation="8" flood-color="#1e293b" flood-opacity=".08"/></filter>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#2563eb"/></marker>
+    <marker id="arrow-green" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#16a34a"/></marker>
+    <marker id="arrow-violet" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#7c3aed"/></marker>
+    <style>
+      text{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;fill:#172033}
+      .title{font-size:34px;font-weight:750;letter-spacing:-.5px}.subtitle{font-size:16px;fill:#64748b}
+      .zone-title{font-size:21px;font-weight:700}.zone-kicker{font-size:12px;font-weight:700;letter-spacing:1.5px;fill:#64748b}
+      .card-title{font-size:17px;font-weight:700}.card-sub{font-size:13px;fill:#64748b}.address{font-size:13px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;fill:#2563eb}
+      .pill{font-size:12px;font-weight:650}.route-label{font-size:13px;font-weight:650;fill:#2563eb}.route-green{fill:#15803d}.route-violet{fill:#6d28d9}.small{font-size:12px;fill:#64748b}
+    </style>
+  </defs>
+  <rect width="1440" height="900" rx="28" fill="url(#bg)"/>
+  <text x="64" y="68" class="zone-kicker">FLOATING LIGHT · HOMELAB NOTES</text>
+  <text x="64" y="115" class="title">家庭服务器网络架构</text>
+  <text x="64" y="145" class="subtitle">公开服务、可信访问与自动部署各走独立链路 · 地址与端口为示例</text>
+
+  <!-- Visitors and trusted devices -->
+  <g filter="url(#shadow)">
+    <rect x="64" y="205" width="260" height="120" rx="18" fill="#fff" stroke="#dbe4f0"/>
+    <rect x="64" y="357" width="260" height="160" rx="18" fill="#fff" stroke="#dbe4f0"/>
+  </g>
+  <text x="88" y="238" class="zone-kicker">PUBLIC USERS</text>
+  <text x="88" y="273" class="card-title">公开访客</text>
+  <text x="88" y="299" class="card-sub">浏览博客与公开 Web 服务</text>
+  <rect x="88" y="379" width="6" height="24" rx="3" fill="#16a34a"/>
+  <text x="108" y="396" class="zone-kicker">TRUSTED DEVICES</text>
+  <text x="88" y="438" class="card-title">电脑 · 手机</text>
+  <text x="88" y="464" class="card-sub">每台设备使用独立 WireGuard Peer</text>
+  <rect x="88" y="481" width="142" height="24" rx="12" fill="#ecfdf5"/><text x="101" y="498" class="address" fill="#15803d">10.98.0.10 / .11</text>
+
+  <!-- Cloud edge -->
+  <g filter="url(#shadow)">
+    <rect x="390" y="190" width="430" height="345" rx="22" fill="#fff" stroke="#bfdbfe" stroke-width="1.5"/>
+  </g>
+  <rect x="390" y="190" width="430" height="10" rx="5" fill="#2563eb"/>
+  <text x="420" y="235" class="zone-kicker">CLOUD EDGE</text>
+  <text x="420" y="269" class="zone-title">云端入口</text>
+  <text x="420" y="294" class="card-sub">公网服务与 VPN 网关</text>
+  <rect x="420" y="322" width="370" height="75" rx="13" fill="url(#blue)" stroke="#bfdbfe"/>
+  <circle cx="451" cy="359" r="17" fill="#2563eb"/><path d="M443 360h16m-8-8v16" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+  <text x="481" y="354" class="card-title">Nginx · HTTPS</text><text x="481" y="378" class="card-sub">域名访问公开网站 · TCP 80 / 443</text>
+  <rect x="420" y="414" width="370" height="82" rx="13" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <circle cx="451" cy="454" r="17" fill="#16a34a"/><path d="M451 443v22m-7-7 7 7 7-7" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="481" y="449" class="card-title">WireGuard Server</text><text x="481" y="475" class="card-sub">可信设备接入 · UDP 51820（示例）</text>
+  <text x="420" y="520" class="address">VPN 网段：10.98.0.0/24</text>
+
+  <!-- Home LAN -->
+  <g filter="url(#shadow)">
+    <rect x="390" y="610" width="750" height="225" rx="22" fill="url(#green)" stroke="#86efac" stroke-width="1.5"/>
+  </g>
+  <text x="420" y="653" class="zone-kicker">HOME LAN · 10.97.0.0/24</text>
+  <text x="420" y="686" class="zone-title">家庭网络</text>
+  <rect x="420" y="711" width="208" height="94" rx="13" fill="#fff" stroke="#bbf7d0"/>
+  <rect x="647" y="711" width="210" height="94" rx="13" fill="#fff" stroke="#bbf7d0"/>
+  <rect x="876" y="711" width="234" height="94" rx="13" fill="#fff" stroke="#bbf7d0"/>
+  <text x="441" y="745" class="card-title">N150 · PVE</text><text x="441" y="770" class="card-sub">虚拟化主机</text><text x="441" y="791" class="address">10.97.0.10</text>
+  <text x="668" y="745" class="card-title">N100 · PBS</text><text x="668" y="770" class="card-sub">独立备份设备</text><text x="668" y="791" class="address">10.97.0.20</text>
+  <text x="897" y="745" class="card-title">Ubuntu 虚拟机</text><text x="897" y="770" class="card-sub">应用 · 自建服务 · 部署接收</text><text x="897" y="791" class="address">10.97.0.30</text>
+
+  <!-- Deployment -->
+  <g filter="url(#shadow)">
+    <rect x="1000" y="190" width="376" height="345" rx="22" fill="#fff" stroke="#ddd6fe" stroke-width="1.5"/>
+  </g>
+  <rect x="1000" y="190" width="376" height="10" rx="5" fill="#7c3aed"/>
+  <text x="1030" y="235" class="zone-kicker">DEPLOYMENT</text>
+  <text x="1030" y="269" class="zone-title">自动部署</text>
+  <text x="1030" y="294" class="card-sub">仅转发部署包到 Ubuntu 自建服务</text>
+  <rect x="1030" y="322" width="316" height="58" rx="12" fill="#f5f3ff" stroke="#ddd6fe"/>
+  <text x="1052" y="357" class="card-title">GitHub Actions</text>
+  <path d="M1188 383v23" stroke="#7c3aed" stroke-width="2" marker-end="url(#arrow-violet)"/>
+  <rect x="1030" y="413" width="316" height="58" rx="12" fill="#f5f3ff" stroke="#ddd6fe"/>
+  <text x="1052" y="448" class="card-title">FRP 部署通道</text>
+  <path d="M1188 474v23" stroke="#7c3aed" stroke-width="2" marker-end="url(#arrow-violet)"/>
+  <rect x="1030" y="505" width="316" height="1" fill="#ddd6fe"/>
+  <text x="1030" y="526" class="small">仅用于自动化部署，不映射管理面</text>
+
+  <!-- Connections -->
+  <path d="M324 265h55" fill="none" stroke="#2563eb" stroke-width="2.5" marker-end="url(#arrow-blue)"/>
+  <text x="332" y="249" class="route-label">HTTPS</text>
+  <path d="M324 435h55" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-dasharray="6 6" marker-end="url(#arrow-green)"/>
+  <text x="330" y="419" class="route-label route-green">VPN</text>
+  <path d="M600 538v58" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-dasharray="6 6" marker-end="url(#arrow-green)"/>
+  <text x="614" y="578" class="route-label route-green">私有路由</text>
+  <path d="M1188 535v48H993v120" fill="none" stroke="#7c3aed" stroke-width="2.5" stroke-dasharray="7 6" marker-end="url(#arrow-violet)"/>
+  <text x="1035" y="575" class="route-label route-violet">部署包</text>
+
+  <!-- Legend -->
+  <rect x="64" y="858" width="1312" height="1" fill="#dbe4f0"/>
+  <circle cx="84" cy="878" r="5" fill="#2563eb"/><text x="98" y="883" class="small">公开 Web</text>
+  <circle cx="222" cy="878" r="5" fill="#16a34a"/><text x="236" y="883" class="small">WireGuard 私有访问</text>
+  <circle cx="434" cy="878" r="5" fill="#7c3aed"/><text x="448" y="883" class="small">FRP 自动部署</text>
+  <text x="1374" y="883" class="small" text-anchor="end">示例地址请按实际网络调整</text>
+</svg>

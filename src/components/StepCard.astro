@@ -1,0 +1,51 @@
+---
+interface Props {
+	number: string;
+	title: string;
+	result?: string;
+}
+
+const { number, title, result } = Astro.props;
+---
+
+<section class="step-card">
+	<header class="step-heading">
+		<span class="step-number">{number}</span>
+		<div><p>操作步骤</p><h3>{title}</h3></div>
+	</header>
+	<div class="step-content"><slot /></div>
+	{result && <p class="step-result"><strong>验证结果</strong>{result}</p>}
+</section>
+
+<style>
+	.step-card {
+		margin: 1.75rem 0;
+		padding: 1.25rem;
+		border: 1px solid var(--color-border);
+		border-radius: 12px;
+		background: var(--color-surface);
+		box-shadow: var(--shadow-card);
+	}
+	.step-heading { display: flex; align-items: center; gap: 0.9rem; margin-bottom: 0.9rem; }
+	.step-number {
+		display: grid;
+		place-items: center;
+		flex: 0 0 2.65rem;
+		height: 2.65rem;
+		border-radius: 10px;
+		background: var(--accent-soft);
+		color: var(--accent);
+		font: 700 0.78rem/1 var(--font-mono);
+	}
+	.step-heading p { margin: 0 0 0.15rem; color: rgb(var(--gray)); font-size: 0.7rem; }
+	.step-heading h3 { margin: 0; font-size: 1.05rem; }
+	.step-content { color: rgb(var(--gray-dark)); }
+	.step-content :global(p:last-child),
+	.step-content :global(ul:last-child),
+	.step-content :global(ol:last-child) { margin-bottom: 0; }
+	.step-content :global(pre) { margin: 0.75rem 0; }
+	.step-result { display: grid; grid-template-columns: max-content 1fr; gap: 0.4rem 0.7rem; margin: 1rem 0 0; padding: 0.75rem 0.9rem; border-radius: 8px; background: var(--color-surface-muted); color: rgb(var(--gray)); font-size: 0.84rem; }
+	.step-result strong { color: #15803d; }
+	:global(:root.dark) .step-result strong { color: #86efac; }
+	@media (max-width: 600px) { .step-card { padding: 1rem; } }
+</style>

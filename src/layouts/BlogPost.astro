@@ -8,163 +8,220 @@ import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 
-type Heading = {
-	slug: string;
-	text: string;
-	depth: number;
-};
+type Heading = { slug: string; text: string; depth: number };
+type Props = CollectionEntry<'blog'>['data'] & { headings?: Heading[]; readMinutes?: number };
 
-type Props = CollectionEntry<'blog'>['data'] & {headings?: Heading[];};
-
-const { title, description, pubDate, updatedDate, heroImage, headings = [] } = Astro.props;
-
-// 是否有足够的目录项（H2/H3 至少 1 个），决定是否启用目录侧边栏布局
-const hasToc = headings.some((h) => h.depth >= 2 && h.depth <= 3);
+const { title, description, pubDate, updatedDate, heroImage, tags = [], headings = [], readMinutes } = Astro.props;
+const hasToc = headings.some((heading) => heading.depth >= 2 && heading.depth <= 3);
 ---
 
 <html lang="zh-CN">
-	<head>
-		<BaseHead title={title} description={description} />
-		<style>
-			/* 只有博客文章页（有目录）才覆盖 main 宽度，
-			   容纳正文 720px + 目录 260px + 间距；
-			   about 页等无目录页面保持 global.css 的 720px 居中 */
-			:global(body.has-toc main) {
-				width: calc(100% - 2em);
-				max-width: 100%;
-				margin: 0;
-				padding: 3em 1em;
-			}
-			.hero-image {
-				width: 100%;
-			}
-			.hero-image img {
-				display: block;
-				margin: 0 auto;
-				border-radius: 12px;
-				box-shadow: var(--box-shadow);
-			}
-			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
-			}
-			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
-				text-align: center;
-				line-height: 1;
-			}
-			.title h1 {
-				margin: 0 0 0.5em 0;
-			}
-			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
-			}
-			.last-updated-on {
-				font-style: italic;
-			}
-			/* 文章正文 + 目录侧边栏布局（仅 has-toc 页面启用）：
-			   正文保持 720px 可读性，目录放在正文右侧的边距区域。
-			   align-items: stretch 让目录列拉伸到与正文等高，
-			   内部 sticky 目录才有空间"粘"在视口内。 */
-			.article-layout {
-				display: grid;
-				grid-template-columns: minmax(0, 1fr) minmax(0, 720px) 260px minmax(0, 1fr);
-				gap: 0 2.5rem;
-				align-items: stretch;
-				max-width: 1280px;
-				margin: 0 auto;
-			}
-
-			.article-content {
-				grid-column: 2;
-				grid-row: 1;
-				min-width: 0;
-				padding: 0 1em;
-				color: rgb(var(--gray-dark));
-			}
-			.article-content :global(p) {
-				margin-bottom: 2em;
-			}
-
-			.article-toc {
-				grid-column: 3;
-				grid-row: 1;
-			}
-
-			@media (max-width: 1100px) {
-				.article-layout {
-					grid-template-columns: minmax(0, 1fr) minmax(0, 720px) minmax(0, 1fr);
-				}
-				.article-content {
-					grid-column: 2;
-				}
-				.article-toc {
-					display: none;
-				}
-			}
-
-			@media (max-width: 768px) {
-				.article-layout {
-					display: block;
-				}
-				.article-toc {
-					display: block;
-				}
-			}
-		</style>
-	</head>
-
-	<body class={hasToc ? 'has-toc' : ''}>
+	<head><BaseHead title={`${title} | 浮光策`} description={description} image={heroImage} /></head>
+	<body class:list={['blog-post-page', hasToc && 'has-toc']}>
+		<div class="reading-progress" aria-hidden="true"></div>
 		<Header />
-		<main>
-			<article>
-				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
-				</div>
-				<div class="prose">
-					<div class="title">
-						<div class="date">
-							<FormattedDate date={pubDate} />
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)
-							}
-						</div>
-						<h1>{title}</h1>
-						<hr />
+		<main class="post-main">
+			<article class="post">
+				<nav class="breadcrumb" aria-label="面包屑导航"><a href="/">首页</a><span aria-hidden="true">/</span><a href="/blog/">博客</a><span aria-hidden="true">/</span><span>{tags[0] ?? '文章'}</span></nav>
+				<header class="post-header">
+					<p class="eyebrow">{tags[0] ? tags[0].toUpperCase() : 'BLOG / NOTES'}</p>
+					<h1>{title}</h1>
+					{description && <p class="post-description">{description}</p>}
+					<div class="post-meta">
+						<span>发布于 <FormattedDate date={pubDate} /></span>
+						{updatedDate && <span>更新于 <FormattedDate date={updatedDate} /></span>}
+						{readMinutes && <span>约 {readMinutes} 分钟阅读</span>}
 					</div>
-				</div>
-
-				{
-					hasToc ? (
-						<div class="article-layout">
-							<aside class="article-toc">
-								<TableOfContents headings={headings} />
-							</aside>
-							<div class="article-content">
-								<slot />
-							</div>
-						</div>
-					) : (
-						<div class="prose">
-							<slot />
-						</div>
-					)
-				}
-
-				<div class="prose">
-					<Giscus />
+					{tags.length > 0 && <ul class="post-tags" aria-label="文章标签">{tags.map((tag) => <li>{tag}</li>)}</ul>}
+				</header>
+				{heroImage && (
+					<figure class="hero-image"><Image width={1020} height={510} src={heroImage} alt={title} /><figcaption>{description}</figcaption></figure>
+				)}
+				{hasToc ? (
+					<div class="article-layout">
+						<div class="article-content"><slot /></div>
+						<aside class="article-toc"><TableOfContents headings={headings} /></aside>
+					</div>
+				) : (
+					<div class="article-content article-content-single"><slot /></div>
+				)}
+				<div class="article-bottom">
+					<div class="article-ending"><span class="ending-mark" aria-hidden="true">✳</span><p>感谢阅读。愿这份记录能为下一次实践省下一点时间。</p></div>
+					<section class="comments" aria-labelledby="comments-title">
+					<div class="comments-heading">
+						<p class="comments-eyebrow">DISCUSSION</p>
+						<h2 id="comments-title">留言与交流</h2>
+						<p>欢迎分享你的想法、经验，或提出与本文相关的问题。</p>
+					</div>
+						<div class="comments-panel"><Giscus /></div>
+					</section>
 				</div>
 			</article>
 		</main>
 		<Footer />
+		<dialog class="article-lightbox" aria-label="图片预览"><button class="lightbox-close" type="button">关闭</button><img alt="" /></dialog>
 	</body>
 </html>
+
+<style>
+	:global(body.blog-post-page) { background: var(--color-bg); }
+	.reading-progress { position: fixed; z-index: 60; top: 0; left: 0; width: 0; height: 2px; background: var(--accent); }
+	.post-main { max-width: none; padding: 2rem 1.25rem 4rem; }
+	.post { max-width: 1320px; margin: 0 auto; }
+	.breadcrumb { display: flex; align-items: center; flex-wrap: wrap; gap: 0.55rem; max-width: 760px; margin: 0 auto 1.8rem; color: rgb(var(--gray)); font-size: 0.76rem; }
+	.breadcrumb a { color: rgb(var(--gray)); text-decoration: none; }
+	.breadcrumb a:hover { color: var(--accent); }
+	.post-header { max-width: 760px; margin: 0 auto 2rem; }
+	.eyebrow { display: flex; align-items: center; gap: 0.55rem; margin: 0 0 0.8rem; color: var(--accent); font: 700 0.7rem/1.5 var(--font-mono); letter-spacing: 0.1em; }
+	.eyebrow::before { width: 1.2rem; height: 2px; background: currentColor; content: ''; }
+	.post-header h1 { margin: 0; font-size: clamp(2.1rem, 5vw, 3.1rem); font-weight: 750; letter-spacing: -0.055em; line-height: 1.22; }
+	.post-description { max-width: 45rem; margin: 1rem 0 1.1rem; color: rgb(var(--gray)); font-size: clamp(1rem, 2vw, 1.15rem); line-height: 1.8; }
+	.post-meta { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; padding-top: 0.9rem; border-top: 1px solid var(--color-border); color: rgb(var(--gray)); font-size: 0.78rem; }
+	.post-meta :global(time) { color: rgb(var(--gray-dark)); }
+	.post-tags { display: flex; flex-wrap: wrap; gap: 0.45rem; margin: 0.9rem 0 0; padding: 0; list-style: none; }
+	.post-tags li { padding: 0.15rem 0.55rem; border: 1px solid var(--color-border); border-radius: 999px; color: rgb(var(--gray)); font-size: 0.7rem; }
+	.hero-image { max-width: 1020px; margin: 0 auto 2.5rem; padding: 0.5rem; border: 1px solid var(--color-border); border-radius: 14px; background: var(--color-surface); box-shadow: var(--shadow-card); }
+	.hero-image img { width: 100%; max-height: 28rem; object-fit: cover; border-radius: 9px; }
+	.hero-image figcaption { padding: 0.65rem 0.35rem 0.15rem; color: rgb(var(--gray)); font-size: 0.78rem; text-align: center; }
+	.article-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 760px) 220px minmax(0, 1fr); gap: 0 2rem; align-items: start; max-width: 1320px; margin: 0 auto; }
+	.article-content { grid-column: 2; grid-row: 1; min-width: 0; color: rgb(var(--gray-dark)); font-size: 1rem; line-height: 1.85; }
+	.article-content-single { max-width: 760px; margin: 0 auto; }
+	.article-content :global(p) { margin: 0 0 1.1rem; }
+	.article-content :global(h2) { margin: 2.5em 0 0.85em; padding-bottom: 0.48em; border-bottom: 1px solid var(--color-border); font-size: 1.625rem; font-weight: 730; letter-spacing: -0.035em; line-height: 1.4; }
+	.article-content :global(h2:first-child) { margin-top: 0; }
+	.article-content :global(h3) { margin: 1.9em 0 0.65em; font-size: 1.3rem; font-weight: 650; letter-spacing: -0.02em; line-height: 1.45; }
+	.article-content :global(h4) { margin: 1.6em 0 0.55em; font-size: 1.12rem; font-weight: 650; }
+	.article-content :global(ul),
+	.article-content :global(ol) { margin: 0.8rem 0 1.4rem; padding-left: 1.45em; }
+	.article-content :global(li) { padding-left: 0.18em; margin: 0.35em 0; }
+	.article-content :global(a) { text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+	.article-content :global(blockquote) { margin: 1.6rem 0; padding: 0.9rem 1.1rem; border: 0; border-left: 3px solid var(--accent); border-radius: 0 9px 9px 0; background: var(--color-surface-muted); color: rgb(var(--gray-dark)); line-height: 1.85; }
+	.article-content :global(blockquote p:last-child) { margin-bottom: 0; }
+	.article-content :global(img) { display: block; max-width: 100%; height: auto; margin: 1.6rem auto; border: 1px solid var(--color-border); border-radius: 9px; }
+	.article-content :global(figure.article-figure) { margin: 1.7rem 0 2rem; padding: 0.65rem; border: 1px solid var(--color-border); border-radius: 12px; background: var(--color-surface); box-shadow: var(--shadow-card); }
+	.article-content :global(figure.article-figure img) { width: 100%; margin: 0 auto; border: 0; border-radius: 7px; cursor: zoom-in; }
+	.article-content :global(figure.article-figure figcaption) { margin: 0; padding: 0.7rem 0.35rem 0.15rem; color: rgb(var(--gray)); font-size: 0.78rem; line-height: 1.6; text-align: left; }
+	.article-content :global(table) { margin: 1.25rem 0 1.7rem; border: 1px solid var(--color-border); border-radius: 10px; font-size: 0.88em; line-height: 1.65; }
+	.article-content :global(th:first-child) { border-radius: 9px 0 0 0; }
+	.article-content :global(th:last-child) { border-radius: 0 9px 0 0; }
+	.article-content :global(th),
+	.article-content :global(td) { min-width: 8rem; }
+	.article-content :global(figure.frame) { position: relative; margin: 1.4rem 0 1.7rem; overflow: hidden; border: 1px solid #303b4a; border-radius: 11px; background: #0d1117; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12); }
+	.article-content :global(figure.frame figcaption.header) { display: flex; align-items: center; min-height: 2.5rem; padding: 0 0.9rem; border-bottom: 1px solid #303b4a; background: #151b23; color: #aab6c5; font: 650 0.7rem/1 var(--font-mono); letter-spacing: 0.08em; }
+	.article-content :global(figure.frame pre) { max-height: 34rem; margin: 0; padding: 1rem 1.1rem; overflow-x: auto; background: #0d1117 !important; font: 0.84rem/1.7 var(--font-mono); tab-size: 2; }
+	.article-content :global(figure.frame pre code) { font: inherit; }
+	.article-content :global(figure.frame .copy) { position: absolute; top: 0.43rem; right: 0.75rem; z-index: 1; }
+	.article-content :global(figure.frame .copy button) { min-width: 5rem; padding: 0.35rem 0.6rem; border: 1px solid #465263; border-radius: 6px; background: #202833; color: #e2e8f0; font: 500 0.7rem/1.2 var(--font-sans); cursor: pointer; }
+	.article-content :global(figure.frame .copy button div) { display: none; }
+	.article-content :global(figure.frame .copy button::after) { content: '复制代码'; }
+	.article-content :global(figure.frame .copy button:hover) { background: #303b49; }
+	.article-content :global(figure.frame.has-line-numbers .ec-line) { display: grid; grid-template-columns: 2.5rem minmax(0, 1fr); }
+	.article-content :global(figure.frame.has-line-numbers .ec-line::before) { counter-increment: code-line; content: counter(code-line); padding-right: 0.85rem; color: #667386; text-align: right; user-select: none; }
+	.article-content :global(figure.frame.has-line-numbers pre code) { counter-reset: code-line; }
+	.article-content :global(.compare-grid) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.8rem; margin: 1.4rem 0 1.8rem; }
+	.article-content :global(.compare-card) { display: grid; align-content: start; gap: 0.65rem; padding: 1rem; border: 1px solid var(--color-border); border-radius: 11px; background: var(--color-surface); }
+	.article-content :global(.compare-card > span) { margin-bottom: 0.15rem; color: rgb(var(--gray)); font-size: 0.72rem; font-weight: 700; }
+	.article-content :global(.compare-card strong) { color: rgb(var(--gray-dark)); font-size: 0.82rem; }
+	.article-content :global(.compare-card i) { color: rgb(var(--gray)); font-size: 0.75rem; font-style: normal; }
+	.article-content :global(.compare-old) { background: var(--color-surface-muted); }
+	.article-content :global(.compare-new) { border-color: color-mix(in srgb, var(--accent) 32%, var(--color-border)); background: var(--accent-soft); }
+	.article-content :global(.route-flow) { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0.45rem; margin: 1rem 0 1.25rem; padding: 0.9rem; border: 1px solid var(--color-border); border-radius: 11px; background: var(--color-surface-muted); }
+	.article-content :global(.route-flow span) { padding: 0.35rem 0.55rem; border: 1px solid var(--color-border); border-radius: 7px; background: var(--color-surface); color: rgb(var(--gray-dark)); font-size: 0.75rem; font-weight: 650; }
+	.article-content :global(.route-flow b) { color: var(--accent); font-size: 0.83rem; }
+	.article-toc { grid-column: 3; grid-row: 1; }
+	.article-content :global(h2),
+	.article-content :global(h3),
+	.article-content :global(h4) { scroll-margin-top: 6rem; }
+	.article-bottom { max-width: 1320px; margin: 0 auto; }
+	:global(body.has-toc) .article-bottom { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 760px) 220px minmax(0, 1fr); gap: 0 2rem; }
+	.article-ending { display: flex; align-items: center; gap: 0.8rem; width: 100%; max-width: 760px; margin: 3rem auto 0; padding: 1rem 1.2rem; border: 1px solid var(--color-border); border-radius: 11px; background: var(--color-surface); }
+	:global(body.has-toc) .article-ending { grid-column: 2; max-width: none; margin: 3rem 0 0; }
+	.article-ending p { margin: 0; color: rgb(var(--gray)); font-size: 0.82rem; }
+	.ending-mark { color: var(--accent); font-size: 1.2rem; }
+	.comments { max-width: 760px; margin: 3.5rem auto 0; }
+	:global(body.has-toc) .comments { grid-column: 2; max-width: none; margin: 3.5rem 0 0; }
+	.comments-heading { margin: 0 0 1rem; }
+	.comments-eyebrow { margin: 0 0 0.45rem; color: var(--accent); font: 700 0.66rem/1.4 var(--font-mono); letter-spacing: 0.12em; }
+	.comments-heading h2 { margin: 0; color: rgb(var(--black)); font-size: 1.4rem; font-weight: 720; letter-spacing: -0.035em; line-height: 1.35; }
+	.comments-heading > p:last-child { margin: 0.4rem 0 0; color: rgb(var(--gray)); font-size: 0.84rem; line-height: 1.65; }
+	.comments-panel { padding: clamp(0.8rem, 2.5vw, 1.35rem); border: 1px solid var(--color-border); border-radius: 14px; background: var(--color-surface); box-shadow: var(--shadow-card); }
+	.comments-panel :global(.giscus) { width: 100%; min-width: 0; }
+	.comments-panel :global(iframe.giscus-frame) { width: 100%; border: 0; }
+	:global(dialog.article-lightbox) { max-width: min(94vw, 1500px); max-height: 92vh; padding: 0.75rem; border: 1px solid var(--color-border); border-radius: 12px; background: var(--color-bg); color: rgb(var(--gray-dark)); box-shadow: 0 24px 90px rgba(0, 0, 0, 0.45); }
+	:global(dialog.article-lightbox::backdrop) { background: rgba(5, 8, 14, 0.82); }
+	:global(dialog.article-lightbox img) { display: block; max-width: 90vw; max-height: 82vh; margin: auto; object-fit: contain; }
+	:global(dialog.article-lightbox .lightbox-close) { display: block; margin: 0 0 0 auto; padding: 0.3rem 0.65rem; border: 1px solid var(--color-border); border-radius: 7px; background: var(--color-surface); color: rgb(var(--gray-dark)); font-size: 0.8rem; cursor: pointer; }
+	@media (max-width: 1120px) {
+		.article-layout { display: flex; flex-direction: column; max-width: 760px; }
+		.article-toc { order: -1; width: 100%; margin-bottom: 1.4rem; }
+		.article-content { width: 100%; }
+		:global(body.has-toc) .article-bottom { display: block; max-width: 760px; }
+		:global(body.has-toc) .article-ending,
+		:global(body.has-toc) .comments { max-width: none; margin-left: 0; margin-right: 0; }
+	}
+	@media (max-width: 720px) {
+		.post-main { padding: 1.5rem 1rem 3rem; }
+		.breadcrumb { margin-bottom: 1.25rem; }
+		.post-header { margin-bottom: 1.5rem; }
+		.post-header h1 { font-size: clamp(1.9rem, 8vw, 2.55rem); }
+		.post-description { margin: 0.8rem 0 1rem; font-size: 0.96rem; }
+		.post-meta { gap: 0.4rem 0.75rem; font-size: 0.72rem; }
+		.hero-image { margin-bottom: 1.75rem; }
+		.article-content { font-size: 1rem; line-height: 1.82; }
+		.article-content :global(h2) { margin-top: 2.2em; font-size: 1.45rem; }
+		.article-content :global(h3) { font-size: 1.18rem; }
+		.article-content :global(.compare-grid) { grid-template-columns: 1fr; }
+		.article-content :global(.route-flow) { justify-content: flex-start; gap: 0.35rem; }
+		.article-content :global(.route-flow span) { font-size: 0.7rem; }
+		.article-content :global(.route-flow b) { font-size: 0.72rem; }
+		.article-ending { margin-top: 2.2rem; padding: 0.9rem; }
+		.comments { margin-top: 2.5rem; }
+		.comments-panel { padding: 0.65rem; border-radius: 11px; }
+	}
+</style>
+
+<script>
+	const frames = document.querySelectorAll<HTMLElement>('.article-content figure.frame');
+	for (const frame of frames) {
+		const pre = frame.querySelector('pre');
+		const code = pre?.querySelector('code');
+		const header = frame.querySelector('figcaption.header');
+		if (!pre || !code || !header) continue;
+		const language = pre.dataset.language || 'text';
+		const label = document.createElement('span');
+		label.className = 'code-language';
+		label.textContent = language.toLowerCase() === 'text' ? 'TEXT' : language.toUpperCase();
+		header.replaceChildren(label);
+		const copyButton = frame.querySelector<HTMLButtonElement>('.copy button');
+		copyButton?.setAttribute('title', '复制代码');
+		copyButton?.setAttribute('aria-label', `复制${label.textContent}代码`);
+		if (code.querySelectorAll('.ec-line').length >= 12) frame.classList.add('has-line-numbers');
+	}
+
+	const article = document.querySelector('.article-content');
+	const lightbox = document.querySelector<HTMLDialogElement>('dialog.article-lightbox');
+	const preview = lightbox?.querySelector<HTMLImageElement>('img');
+	lightbox?.querySelector('.lightbox-close')?.addEventListener('click', () => lightbox.close());
+	if (article && lightbox && preview) {
+		article.querySelectorAll<HTMLImageElement>('img').forEach((image) => {
+			if (image.closest('a')) return;
+			image.addEventListener('click', () => {
+				preview.src = image.currentSrc || image.src;
+				preview.alt = image.alt;
+				lightbox.showModal();
+			});
+		});
+		lightbox.addEventListener('click', (event) => { if (event.target === lightbox) lightbox.close(); });
+	}
+
+	const progress = document.querySelector<HTMLElement>('.reading-progress');
+const updateProgress = () => {
+		if (!progress) return;
+		const available = document.documentElement.scrollHeight - window.innerHeight;
+		const percent = available > 0 ? Math.min(100, Math.max(0, (window.scrollY / available) * 100)) : 0;
+		progress.style.width = `${percent}%`;
+	};
+	window.addEventListener('scroll', updateProgress, { passive: true });
+	window.addEventListener('resize', updateProgress);
+	updateProgress();
+</script>

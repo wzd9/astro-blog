@@ -1,55 +1,95 @@
 ---
-import AboutHeroImage from '../assets/blog-placeholder-about.jpg';
-import Layout from '../layouts/BlogPost.astro';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_TITLE } from '../consts';
 ---
 
-<Layout
-	title="关于我"
-	description="关于本站和作者的介绍"
-	pubDate={new Date('2026-09-08')}
-	heroImage={AboutHeroImage}
->
-	<p>
-		你好，我是一名 Java 后端开发者，平时主要从事服务端开发工作，日常技术栈以
-		<strong>Java、Spring Boot、MySQL、Redis</strong> 为主，也会接触到 Nginx、Docker、Linux
-		服务器运维等相关内容。
-	</p>
+<!doctype html>
+<html lang="zh-CN">
+	<head><BaseHead title={`关于 | ${SITE_TITLE}`} description="关于作者、博客与技术兴趣。" /></head>
+	<body class="about-page">
+		<Header />
+		<main class="about-main">
+			<header class="about-heading">
+				<p class="section-kicker">ABOUT / FLOATING LIGHT</p>
+				<h1>你好，我是 <span>wzd9</span></h1>
+				<p>Java 后端开发者，也是一名持续折腾家庭服务器的技术爱好者。</p>
+			</header>
+			<div class="about-layout">
+				<article class="about-copy">
+					<section>
+						<h2>关于我</h2>
+						<p>平时主要从事服务端开发工作，日常技术栈以 <strong>Java、Spring Boot、MySQL、Redis</strong> 为主，也会接触到 Nginx、Docker、Linux 服务器运维等相关内容。</p>
+						<p>我喜欢把学到的东西整理成文字。写下来的过程能帮助自己把知识点理清；很多问题在网上搜索时，最有用的答案也常来自别人记录的博客。所以我搭建了这个网站，把学习笔记、项目实践和踩坑记录沉淀下来，方便日后查阅，也希望能帮到遇到同样问题的人。</p>
+					</section>
+					<section>
+						<h2>这个网站</h2>
+						<p>本站使用 <a href="https://astro.build/">Astro</a> 构建，文档部分基于 Starlight，分为两个部分：</p>
+						<div class="site-areas">
+							<a href="/blog/"><span>01 / BLOG</span><strong>博客</strong><small>具体的开发问题、排查思路和实践总结。</small></a>
+							<a href="/docs/"><span>02 / DOCS</span><strong>技术文档</strong><small>整理成体系的技术资料，目前以 Java 为主。</small></a>
+						</div>
+					</section>
+					<section>
+						<h2>技术兴趣</h2>
+						<ul class="interest-grid">
+							<li><strong>Java 后端</strong><span>Spring Boot、并发编程、JVM 调优</span></li>
+							<li><strong>数据存储</strong><span>MySQL、Redis</span></li>
+							<li><strong>服务器运维</strong><span>Linux、Nginx、Docker、FRP</span></li>
+							<li><strong>自建服务</strong><span>监控、推送、家庭虚拟化与 Proxmox</span></li>
+						</ul>
+					</section>
+					<section>
+						<h2>联系我</h2>
+						<p>如果文章中有错误，或者你有不同的见解，欢迎交流。可以通过导航栏的 GitHub 链接找到我，也可以在相关文章下留言讨论。</p>
+						<p class="closing">感谢访问，祝你在这里有所收获。</p>
+					</section>
+				</article>
+				<aside class="about-aside">
+					<div class="aside-card"><span class="aside-mark">浮</span><strong>浮光策</strong><p>技术实践与知识沉淀。记录问题，也记录解决问题的过程。</p><a href="/blog/">从最新文章开始 <span aria-hidden="true">↗</span></a></div>
+					<div class="aside-note"><span>NOTES TO SELF</span><p>飞光飞光，劝尔一杯酒。</p><small>李贺 ·《苦昼短》</small></div>
+				</aside>
+			</div>
+		</main>
+		<Footer />
+	</body>
+</html>
 
-	<p>
-		我喜欢把学到的东西整理成文字。一方面，写下来的过程能帮助自己把知识点真正理清；另一方面，
-		很多问题在网上搜索时，最有用的答案往往也来自别人记录的博客。所以我搭建了这个网站，
-		把自己的学习笔记、项目实践和踩坑记录沉淀下来，既方便日后查阅，也希望能帮到遇到同样问题的人。
-	</p>
-
-	<h2>这个网站</h2>
-
-	<p>
-		本站使用 <a href="https://astro.build/">Astro</a> 构建，文档部分基于
-		Starlight。网站分为两个部分：
-	</p>
-
-	<ul>
-		<li><a href="/blog/">博客</a>：记录具体的开发问题、排查思路和实践总结；</li>
-		<li><a href="/docs/">技术文档</a>：整理成体系的技术资料，目前以 Java 为主，后续会持续补充。</li>
-	</ul>
-
-	<h2>技术兴趣</h2>
-
-	<p>工作和折腾中比较关注的方向：</p>
-
-	<ul>
-		<li>Java 后端：Spring Boot、并发编程、JVM 调优</li>
-		<li>数据存储：MySQL、Redis</li>
-		<li>服务器运维：Linux、Nginx、Docker、FRP</li>
-		<li>各种自建服务：监控、推送、家庭虚拟化（Proxmox）等</li>
-	</ul>
-
-	<h2>联系我</h2>
-
-	<p>
-		如果文章中有错误，或者你有不同的见解，欢迎交流。可以通过网站导航栏的社交链接找到我，
-		也可以在相关文章下留言讨论。
-	</p>
-
-	<p>感谢访问，祝你在这里有所收获！</p>
-</Layout>
+<style>
+	.about-main { padding-top: 3.5rem; }
+	.section-kicker { margin: 0 0 0.6rem; color: var(--accent); font: 700 0.7rem/1.5 var(--font-mono); letter-spacing: 0.12em; }
+	.about-heading { margin-bottom: 2.5rem; }
+	.about-heading h1 { margin: 0 0 0.65rem; font-size: clamp(2.25rem, 5vw, 3.2rem); letter-spacing: -0.05em; }
+	.about-heading h1 span { color: var(--accent); }
+	.about-heading > p:last-child { margin: 0; color: rgb(var(--gray)); font-size: 1.02rem; }
+	.about-layout { display: grid; grid-template-columns: minmax(0, 760px) minmax(230px, 300px); align-items: start; gap: clamp(2rem, 7vw, 6rem); }
+	.about-copy { min-width: 0; padding: clamp(1.25rem, 3vw, 2.25rem); border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface); box-shadow: var(--shadow-card); }
+	.about-copy section + section { margin-top: 2.2rem; padding-top: 1.8rem; border-top: 1px solid var(--color-border); }
+	.about-copy h2 { margin: 0 0 0.8rem; font-size: 1.2rem; }
+	.about-copy p { color: rgb(var(--gray-dark)); font-size: 0.92rem; line-height: 1.9; }
+	.site-areas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; margin-top: 1rem; }
+	.site-areas a { display: grid; gap: 0.35rem; padding: 1rem; border: 1px solid var(--color-border); border-radius: 10px; background: var(--color-surface-muted); color: inherit; text-decoration: none; transition: border-color 0.18s ease; }
+	.site-areas a:hover { border-color: var(--accent); }
+	.site-areas span { color: var(--accent); font: 700 0.65rem/1.4 var(--font-mono); letter-spacing: 0.08em; }
+	.site-areas strong { color: rgb(var(--black)); font-size: 0.94rem; }
+	.site-areas small { color: rgb(var(--gray)); font-size: 0.76rem; line-height: 1.6; }
+	.interest-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.65rem; margin: 1rem 0 0; padding: 0; list-style: none; }
+	.interest-grid li { display: grid; gap: 0.3rem; padding: 0.85rem; border: 1px solid var(--color-border); border-radius: 9px; }
+	.interest-grid strong { color: rgb(var(--black)); font-size: 0.84rem; }
+	.interest-grid span { color: rgb(var(--gray)); font-size: 0.74rem; line-height: 1.55; }
+	.closing { color: var(--accent) !important; font-weight: 650; }
+	.about-aside { position: sticky; top: 6rem; display: grid; gap: 0.8rem; }
+	.aside-card,
+	.aside-note { padding: 1.2rem; border: 1px solid var(--color-border); border-radius: 12px; background: var(--color-surface); }
+	.aside-mark { display: grid; place-items: center; width: 38px; height: 38px; margin-bottom: 0.75rem; border-radius: 12px; background: var(--accent); color: white; font-weight: 700; }
+	.aside-card > strong { color: rgb(var(--black)); }
+	.aside-card p { margin: 0.45rem 0 0.85rem; color: rgb(var(--gray)); font-size: 0.8rem; line-height: 1.7; }
+	.aside-card a { font-size: 0.78rem; font-weight: 650; text-decoration: none; }
+	.aside-note { background: var(--accent-soft); }
+	.aside-note span { color: var(--accent); font: 700 0.62rem/1.4 var(--font-mono); letter-spacing: 0.09em; }
+	.aside-note p { margin: 0.7rem 0 0.25rem; color: rgb(var(--black)); font-family: 'Songti SC', 'STSong', serif; font-size: 1.05rem; }
+	.aside-note small { color: rgb(var(--gray)); font-size: 0.7rem; }
+	@media (max-width: 800px) { .about-layout { grid-template-columns: 1fr; gap: 1rem; } .about-aside { position: static; grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+	@media (max-width: 560px) { .about-main { padding-top: 2.3rem; } .site-areas, .interest-grid, .about-aside { grid-template-columns: 1fr; } }
+</style>

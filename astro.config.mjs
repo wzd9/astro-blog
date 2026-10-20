@@ -23,7 +23,8 @@ export default defineConfig({
 	},
 	integrations: [
 		starlight({
-			title: '我的技术文档',
+			title: '浮光策 · 技术文档',
+			customCss: ['./src/styles/docs.css'],
 			// dev 模式关闭 pagefind（避免 /pagefind/* 404 警告），build 模式开启（生成搜索索引）
 			pagefind: IS_PROD,
 			// 把博客页的主题选择同步到 Starlight Docs 页，以及让 Starlight 内置 ThemeSelect 的选择反向同步回博客页
@@ -32,7 +33,6 @@ export default defineConfig({
 					tag: 'script',
 					attrs: { 'is:inline': true },
 					content: `
-						/* Starlight Docs 页 <-> 博客页 主题双向同步脚本
 						(() => {
 							const root = document.documentElement;
 

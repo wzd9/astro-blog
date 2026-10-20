@@ -1,0 +1,40 @@
+@font-face {
+	font-family: 'Atkinson';
+	src: url('../assets/fonts/atkinson-regular.woff') format('woff');
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Atkinson';
+	src: url('../assets/fonts/atkinson-bold.woff') format('woff');
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+}
+
+:root {
+	--sl-font: 'Atkinson', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+	--sl-content-width: 48rem;
+	--sl-color-accent-low: #eaf2ff;
+	--sl-color-accent: #2563eb;
+	--sl-color-accent-high: #1e3a8a;
+}
+
+:root[data-theme='dark'] {
+	--sl-color-accent-low: #172c4d;
+	--sl-color-accent: #78a8ff;
+	--sl-color-accent-high: #dbeafe;
+}
+
+.header {
+	border-bottom: 1px solid var(--sl-color-gray-5);
+}
+
+.sidebar-pane,
+.right-sidebar { border-color: var(--sl-color-gray-5); }
+
+.sl-markdown-content :is(pre, table) { border-radius: 0.75rem; }
+
+.sl-markdown-content :is(th, td) { padding: 0.7rem 0.85rem; }
