@@ -62,6 +62,6 @@ docker run --name mysql8 \
 
 连接 url 如下
 
-````mysql
+````text
 jdbc:mysql://ip地址:端口号/mysql?useSSL=no&allowPublicKeyRetrieval=true
 ````

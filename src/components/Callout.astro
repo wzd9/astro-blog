@@ -1,0 +1,40 @@
+---
+interface Props {
+	type?: 'info' | 'warning' | 'success' | 'danger';
+	title: string;
+}
+
+const { type = 'info', title } = Astro.props;
+---
+
+<aside class:list={['callout', `callout-${type}`]} role={type === 'warning' || type === 'danger' ? 'alert' : 'note'}>
+	<strong class="callout-title">{title}</strong>
+	<div class="callout-body"><slot /></div>
+</aside>
+
+<style>
+	.callout {
+		--callout-bg: #eff6ff;
+		--callout-border: #60a5fa;
+		--callout-text: #1e40af;
+		margin: 1.5rem 0;
+		padding: 1rem 1.2rem;
+		border: 1px solid color-mix(in srgb, var(--callout-border) 48%, transparent);
+		border-left: 4px solid var(--callout-border);
+		border-radius: 0 10px 10px 0;
+		background: var(--callout-bg);
+		color: var(--callout-text);
+		line-height: 1.75;
+	}
+	.callout-warning { --callout-bg: #fffbeb; --callout-border: #f59e0b; --callout-text: #92400e; }
+	.callout-success { --callout-bg: #f0fdf4; --callout-border: #22c55e; --callout-text: #166534; }
+	.callout-danger { --callout-bg: #fef2f2; --callout-border: #ef4444; --callout-text: #991b1b; }
+	.callout-title { display: block; margin-bottom: 0.3rem; font-size: 0.9rem; font-weight: 750; }
+	.callout-body :global(p:last-child) { margin-bottom: 0; }
+	.callout-body :global(ul:last-child),
+	.callout-body :global(ol:last-child) { margin-bottom: 0; }
+	:global(:root.dark) .callout { --callout-bg: #172638; --callout-border: #60a5fa; --callout-text: #bfdbfe; }
+	:global(:root.dark) .callout-warning { --callout-bg: #302718; --callout-border: #d97706; --callout-text: #fde68a; }
+	:global(:root.dark) .callout-success { --callout-bg: #172b22; --callout-border: #22c55e; --callout-text: #bbf7d0; }
+	:global(:root.dark) .callout-danger { --callout-bg: #321f24; --callout-border: #f87171; --callout-text: #fecaca; }
+</style>
