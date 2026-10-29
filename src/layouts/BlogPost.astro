@@ -111,10 +111,34 @@ const hasToc = headings.some((heading) => heading.depth >= 2 && heading.depth <=
 	.article-content :global(figure.frame pre) { max-height: 34rem; margin: 0; padding: 1rem 1.1rem; overflow-x: auto; background: #0d1117 !important; font: 0.84rem/1.7 var(--font-mono); tab-size: 2; }
 	.article-content :global(figure.frame pre code) { font: inherit; }
 	.article-content :global(figure.frame .copy) { position: absolute; top: 0.43rem; right: 0.75rem; z-index: 1; }
-	.article-content :global(figure.frame .copy button) { min-width: 5rem; padding: 0.35rem 0.6rem; border: 1px solid #465263; border-radius: 6px; background: #202833; color: #e2e8f0; font: 500 0.7rem/1.2 var(--font-sans); cursor: pointer; }
+	.article-content :global(figure.frame .copy button) {
+		display: inline-flex; align-items: center; gap: 0.35rem;
+		width: auto; height: auto; margin: 0; padding: 0.35rem 0.65rem;
+		border: 1px solid rgba(226, 232, 240, 0.32); border-radius: 6px;
+		background: rgba(226, 232, 240, 0.1); color: #e2e8f0; opacity: 1;
+		font: 500 0.72rem/1 var(--font-sans); cursor: pointer;
+		transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+	}
 	.article-content :global(figure.frame .copy button div) { display: none; }
-	.article-content :global(figure.frame .copy button::after) { content: '复制代码'; }
-	.article-content :global(figure.frame .copy button:hover) { background: #303b49; }
+	.article-content :global(figure.frame .copy button::before) {
+		content: ''; position: static; inset: auto; width: 0.85rem; height: 0.85rem; flex: none;
+		margin: 0; border: none; opacity: 1; pointer-events: auto;
+		background: currentColor;
+		-webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='9' y='9' width='13' height='13' rx='2'/%3E%3Cpath d='M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1'/%3E%3C/svg%3E") center / contain no-repeat;
+		mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='9' y='9' width='13' height='13' rx='2'/%3E%3Cpath d='M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1'/%3E%3C/svg%3E") center / contain no-repeat;
+	}
+	.article-content :global(figure.frame .copy button::after) {
+		content: '复制'; position: static; inset: auto; margin: 0; padding: 0;
+		background: none; -webkit-mask-image: none; mask-image: none; line-height: 1; pointer-events: auto;
+	}
+	.article-content :global(figure.frame .copy button:hover) { background: #e2e8f0; border-color: #e2e8f0; color: #0d1117; }
+	.article-content :global(figure.frame .copy button:focus-visible) { outline: 2px solid #7aa2f7; outline-offset: 2px; }
+	.article-content :global(figure.frame .copy button.copied) { border-color: #3fb950; background: rgba(63, 185, 80, 0.18); color: #3fb950; }
+	.article-content :global(figure.frame .copy button.copied::before) {
+		-webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17l-5-5'/%3E%3C/svg%3E");
+		mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17l-5-5'/%3E%3C/svg%3E");
+	}
+	.article-content :global(figure.frame .copy button.copied::after) { content: '已复制'; }
 	.article-content :global(figure.frame.has-line-numbers .ec-line) { display: grid; grid-template-columns: 2.5rem minmax(0, 1fr); }
 	.article-content :global(figure.frame.has-line-numbers .ec-line::before) { counter-increment: code-line; content: counter(code-line); padding-right: 0.85rem; color: #667386; text-align: right; user-select: none; }
 	.article-content :global(figure.frame.has-line-numbers pre code) { counter-reset: code-line; }
@@ -195,6 +219,10 @@ const hasToc = headings.some((heading) => heading.depth >= 2 && heading.depth <=
 		const copyButton = frame.querySelector<HTMLButtonElement>('.copy button');
 		copyButton?.setAttribute('title', '复制代码');
 		copyButton?.setAttribute('aria-label', `复制${label.textContent}代码`);
+		copyButton?.addEventListener('click', () => {
+			copyButton.classList.add('copied');
+			setTimeout(() => copyButton.classList.remove('copied'), 1800);
+		});
 		if (code.querySelectorAll('.ec-line').length >= 12) frame.classList.add('has-line-numbers');
 	}
 
