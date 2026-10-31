@@ -2,6 +2,7 @@
 title: '关于 Collectors.groupingBy 按照某个字段进行分组并排序的问题'
 description: 'Java Stream 中使用 Collectors.groupingBy 分组后顺序不固定的问题分析，以及分组并保持排序的解决方法。'
 pubDate: '2025-01-04'
+heroImage: '/src/assets/IMG_6479.PNG'
 ---
 
  最近，在工作中遇到一个问题，是关于Collectors.groupingBy 按照某个字段进行分组并排序的问题。特此记录。
