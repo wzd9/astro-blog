@@ -1,0 +1,122 @@
+# Astro 项目自动构建 + 部署
+name: Deploy Astro Blog
+
+# push 到 master 分支时触发
+on:
+  push:
+    branches: ["master"]
+
+# 同一时间只允许一个部署任务
+# 新 push 会取消正在进行的旧任务
+concurrency:
+  group: deploy-astro-dev
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    # 使用 GitHub 提供的临时 Ubuntu 环境
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # 1. 拉取代码
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. 配置 Node.js 20，并缓存 npm 依赖
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # 3. 安装依赖
+      - name: Install dependencies
+        run: npm ci
+
+      # 4. 构建 Astro
+      #    Starlight 构建时自动生成 Pagefind 搜索索引（dist/pagefind/*），无需额外步骤
+      - name: Build Astro
+        run: npm run build
+      
+      - name: Debug SSH host fingerprint
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+          EXPECTED_FINGERPRINT: ${{ secrets.DEPLOY_HOST_FINGERPRINT }}
+        run: |
+          set -e
+
+          echo "==== Expected fingerprint ===="
+          echo "$EXPECTED_FINGERPRINT"
+
+          echo "==== Actual fingerprints ===="
+          ssh-keyscan -p "$DEPLOY_PORT" "$DEPLOY_HOST" 2>/dev/null > /tmp/deploy_host_keys
+          ssh-keygen -lf /tmp/deploy_host_keys
+
+          echo "==== Verify ECDSA fingerprint ===="
+          ACTUAL=$(ssh-keygen -lf /tmp/deploy_host_keys | awk '$NF == "(ECDSA)" {print $2}')
+
+          if [ "$ACTUAL" != "$EXPECTED_FINGERPRINT" ]; then
+            echo "ECDSA fingerprint mismatch"
+            exit 1
+          fi
+
+          echo "ECDSA fingerprint verified successfully"
+
+      # 5. 将 dist 上传到 Ubuntu
+      - name: Upload dist to server
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          port: ${{ secrets.DEPLOY_PORT }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          fingerprint: ${{ secrets.DEPLOY_HOST_FINGERPRINT }}
+          passphrase: ${{ secrets.DEPLOY_SSH_PASSPHRASE }}
+          
+
+          # Astro 构建生成的 dist 目录（末尾斜杠表示复制目录内容，递归包含所有子目录）
+          source: "dist/*"
+
+          # Ubuntu 部署目录
+          target: "/home/wzd/servers/astro-blog/dist"
+
+          # 去掉 dist 这一层路径
+          strip_components: 1
+
+          # 删除服务器上旧的文件（部署期间有短暂 downtime，个人博客可接受）
+          rm: true
+
+          timeout: 60s
+          command_timeout: 5m
+
+      # 6. SSH 登录 Ubuntu
+      - name: Verify deployment
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          port: ${{ secrets.DEPLOY_PORT }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          fingerprint: ${{ secrets.DEPLOY_HOST_FINGERPRINT }}
+          passphrase: ${{ secrets.DEPLOY_SSH_PASSPHRASE }}
+
+          script: |
+            set -e
+
+            umask 0002
+
+            echo "==== Deploy user ===="
+            whoami
+
+            echo "==== Astro deploy directory ===="
+
+            ls -lah /home/wzd/servers/astro-blog/dist
+
+            echo "==== HTTP 健康检查 ===="
+            # 确认站点可访问；HTTP 200 才算部署成功
+            curl -fsS -o /dev/null -w "HTTP %{http_code}\n" https://blog.wzdboy.cn/
+
+            echo "==== deploy success ===="
+
