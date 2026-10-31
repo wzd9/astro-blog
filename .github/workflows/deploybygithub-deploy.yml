@@ -52,18 +52,17 @@ jobs:
 
           echo "==== Actual fingerprints ===="
           ssh-keyscan -p "$DEPLOY_PORT" "$DEPLOY_HOST" 2>/dev/null > /tmp/deploy_host_keys
-
           ssh-keygen -lf /tmp/deploy_host_keys
 
-          echo "==== Verify ED25519 fingerprint ===="
-          ACTUAL=$(ssh-keygen -lf /tmp/deploy_host_keys | awk '$NF == "(ED25519)" {print $2}')
+          echo "==== Verify ECDSA fingerprint ===="
+          ACTUAL=$(ssh-keygen -lf /tmp/deploy_host_keys | awk '$NF == "(ECDSA)" {print $2}')
 
           if [ "$ACTUAL" != "$EXPECTED_FINGERPRINT" ]; then
-            echo "Fingerprint mismatch in GitHub Actions runner"
+            echo "ECDSA fingerprint mismatch"
             exit 1
           fi
 
-          echo "Fingerprint verified successfully"
+          echo "ECDSA fingerprint verified successfully"
 
       # 5. 将 dist 上传到 Ubuntu
       - name: Upload dist to server
