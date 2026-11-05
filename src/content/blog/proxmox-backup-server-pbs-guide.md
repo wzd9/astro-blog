@@ -3,7 +3,7 @@ title: '服务器搭建（三）PBS 安装、配置与日常维护'
 description: '在独立的 N100 小主机上部署 Proxmox Backup Server，从 WireGuard 组网到 PVE 备份任务、Prune/GC 与恢复演练。'
 pubDate: '2026-10-28'
 tags: ['Homelab', 'Proxmox', '备份', 'WireGuard']
-heroImage: '/src/assets/泰山云海.jpg'
+heroImage: '/src/assets/heroImage/4.jpg'
 ---
 
 PVE 上跑着虚拟机之后，备份这件事就绕不开了。把备份放在 PVE 本机其实没多大意义，主机一挂，虚拟机和备份一起没了。所以这次把家里另一台 N100 单独拿出来，裸机装了 Proxmox Backup Server（PBS），只负责收备份。
