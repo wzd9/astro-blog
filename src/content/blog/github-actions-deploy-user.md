@@ -3,7 +3,7 @@ title: 'GitHub Actions 新建专属部署用户'
 description: '记录 Ubuntu 上部署账号的创建、SSH 公钥配置，以及和日常账号共享博客目录的做法。'
 pubDate: '2026-10-31'
 tags: ['Ubuntu', 'GitHub Actions', 'SSH', '部署']
-heroImage: '/src/assets/IMG_6476.PNG'
+heroImage: '/src/assets/heroImage/2.jpg'
 ---
 
 给博客加自动部署时，我一开始也考虑过直接用平时登录服务器的账号。配置是省事，但这意味着日常账号的凭据也要交给 GitHub Actions。最后还是单独建了一个 `deploy-user`：工作流只负责上传文件，平时登录和维护继续用 `usertest`。

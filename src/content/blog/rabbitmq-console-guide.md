@@ -3,7 +3,7 @@ title: 'RabbitMQ 控制台操作指南'
 description: 'RabbitMQ Management 控制台各页面字段详解：Overview、Connections、Channels、Exchanges、Queues 与 Admin 用户角色。'
 pubDate: '2026-10-29'
 tags: ['RabbitMQ', '消息队列', '中间件']
-heroImage: '/src/assets/泰山日出.jpg'
+heroImage: '/src/assets/heroImage/5.jpg'
 ---
 
 RabbitMQ 自带的 Management 控制台是日常排查消息问题的第一入口。这篇把控制台各页面的字段含义整理一遍，顺便记录交换机、队列的创建操作。
