@@ -11,7 +11,7 @@ description: Java 开发环境、集合框架、异常体系与泛型等基础�
 
 - **JDK**：推荐安装 JDK 17/21（Temurin 或 Corretto），配置好 `JAVA_HOME` 环境变量
 - **IDE**：IntelliJ IDEA（社区版免费），调试、重构、Maven 集成都很完善
-- **构建工具**：Maven 或 Gradle，参见 [Maven 文档](/docs/java/maven/)
+- **构建工具**：Maven 或 Gradle，参见 [Maven 文档](/docs/java/maven/maven/)
 
 验证安装：
 

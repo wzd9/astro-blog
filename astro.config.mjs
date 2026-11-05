@@ -93,27 +93,36 @@ export default defineConfig({
 				{
 					label: 'Java',
 					items: [
-						{ label: 'Java 简介', link: '/docs/java/' },
+						// { label: 'Java 简介', link: '/docs/java/' },
 						{
 							label: 'Java 基础',
 							items: [
-								{ label: '基础概览', link: '/docs/java/basics/' },
-								{
-									label: '集合与并发',
-									items: [
-										{
-											label: 'Java 并发包（JUC）技术学习指南',
-											link: '/docs/java/basics/collections-concurrency/',
-										},
-									],
-								},
+								{ label: '基础知识', link: '/docs/java/basics/' },
+								{ label: 'Java 并发包（JUC）', link: '/docs/java/basics/collections-concurrency/' },
 							],
 						},
-						{ label: 'Spring Boot', link: '/docs/java/spring-boot/' },
-						{ label: 'Maven', link: '/docs/java/maven/' },
-						{ label: 'Maven 私服（Nexus）', link: '/docs/java/maven-nexus/' },
-						{ label: 'JVM 内存区域', link: '/docs/java/jvm-memory/' },
-						{ label: 'SpringBoot 可扩展接口', link: '/docs/java/springboot-extensions/' },
+						{
+							label: 'Java 进阶',
+							items: [
+								{ label: 'JVM 内存区域', link: '/docs/java/advanced/jvm-memory/' },
+								{ label: 'Java 内存模型（JMM）', link: '/docs/java/advanced/jmm-happens-before/' },
+							],
+						},
+						{
+							label: 'Spring Boot',
+							items: [
+								{ label: 'Spring Boot 入门', link: '/docs/java/spring-boot/spring-boot/' },
+								{ label: 'SpringBoot 可扩展接口', link: '/docs/java/spring-boot/springboot-extensions/' },
+							],
+						},
+						{
+							label: 'Maven',
+							items: [
+								{ label: 'Maven 基础', link: '/docs/java/maven/maven/' },
+								{ label: 'Maven 私服（Nexus）', link: '/docs/java/maven/maven-nexus/' },
+							],
+						},
+						
 					],
 				},
 				{
@@ -128,12 +137,17 @@ export default defineConfig({
 				{
 					label: '中间件',
 					items: [
-						{ label: 'Docker 入门', link: '/docs/middleware/docker-tutorial/' },
-						{ label: 'Docker 安装 MySQL', link: '/docs/middleware/docker-mysql/' },
-						{ label: 'Docker 启动 Redis', link: '/docs/middleware/docker-redis/' },
-						{ label: 'Docker 安装 Nginx', link: '/docs/middleware/docker-nginx/' },
-						{ label: 'Docker 安装 Nacos', link: '/docs/middleware/docker-nacos/' },
-						{ label: 'Docker 安装 ZooKeeper', link: '/docs/middleware/docker-zookeeper/' },
+						{
+							label: 'Docker',
+							items: [
+								{ label: 'Docker 入门', link: '/docs/middleware/docker/tutorial/' },
+								{ label: 'Docker 安装 MySQL', link: '/docs/middleware/docker/mysql/' },
+								{ label: 'Docker 启动 Redis', link: '/docs/middleware/docker/redis/' },
+								{ label: 'Docker 安装 Nginx', link: '/docs/middleware/docker/nginx/' },
+								{ label: 'Docker 安装 Nacos', link: '/docs/middleware/docker/nacos/' },
+								{ label: 'Docker 安装 ZooKeeper', link: '/docs/middleware/docker/zookeeper/' },
+							],
+						},
 						{ label: 'Nacos 集群部署', link: '/docs/middleware/nacos-cluster/' },
 						{ label: 'ZooKeeper 集群搭建', link: '/docs/middleware/zookeeper-cluster/' },
 						{ label: 'Nginx 入门', link: '/docs/middleware/nginx-basics/' },
@@ -150,7 +164,7 @@ export default defineConfig({
 						{ label: 'Bark Server 安装', link: '/docs/ops/bark-server/' },
 						{ label: 'CentOS8 防火墙指令', link: '/docs/ops/firewall/' },
 						{ label: 'Hexo 命令', link: '/docs/ops/hexo-commands/' },
-						{ label: 'Wiregurad 组网', link: '/docs/ops/wireguard-networking/' },
+						{ label: 'WireGuard 组网', link: '/docs/ops/wireguard-networking/' },
 					],
 				},
 			],

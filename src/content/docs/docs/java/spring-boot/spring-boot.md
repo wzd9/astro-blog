@@ -3,7 +3,7 @@ title: Spring Boot
 description: Spring Boot 快速上手、核心注解、配置文件与常用 Starter
 ---
 
-# Spring Boot
+# Spring Boot 介绍
 
 Spring Boot 基于 Spring 框架，通过"约定优于配置"和自动装配，让开发者可以快速创建独立运行的、生产级别的 Spring 应用，是目前 Java 后端开发的事实标准。
 
