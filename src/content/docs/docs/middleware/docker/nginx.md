@@ -3,7 +3,7 @@ title: 'docker 安装 nginx'
 description: '使用 Docker 安装 Nginx，并挂载配置文件与静态资源目录。'
 ---
 
-### docker安装nignx
+# Docker 安装 Nginx
 
 ## 1、拉取nginx镜像
 
@@ -13,11 +13,11 @@ docker pull nginx:latest
 
 ## 2、创建Nginx配置文件
 
-```shell
 启动前需要先创建Nginx外部挂载的配置文件（ /home/wzd/nginx/conf/nginx.conf）
 之所以要先创建 , 是因为Nginx本身容器只存在/etc/nginx 目录 , 本身就不创建 nginx.conf 文件
 当服务器和容器都不存在 nginx.conf 文件时, 执行启动命令的时候 docker会将nginx.conf 作为目录创建 , 这并不是我们想要的结果 。
 
+```shell
 # 创建挂载目录
 mkdir -p /home/wzd/nginx/conf
 mkdir -p /home/wzd/nginx/log

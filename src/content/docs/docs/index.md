@@ -15,11 +15,13 @@ Java 后端开发相关的概念、框架与构建工具：
 
 - [Java 简介](/docs/java/) —— 技术体系、JDK 版本选择与学习路线
 - [Java 基础](/docs/java/basics/) —— 集合框架、异常、泛型、新特性
-- [Spring Boot](/docs/java/spring-boot/) —— 快速上手、常用注解与配置
-- [Maven](/docs/java/maven/) —— 依赖管理、常用命令与镜像配置
-- [Maven 私服（Nexus）](/docs/java/maven-nexus/) —— Nexus 私服安装、配置与依赖上传
+- [Spring Boot 入门](/docs/java/spring-boot/spring-boot/) —— 快速上手、常用注解与配置
+- [Maven](/docs/java/maven/maven/) —— 依赖管理、常用命令与镜像配置
+- [Maven 私服（Nexus）](/docs/java/maven/maven-nexus/) —— Nexus 私服安装、配置与依赖上传
 - [JVM 内存区域](/docs/java/jvm-memory/) —— 运行时数据区与各类内存溢出异常
-- [SpringBoot 可扩展接口](/docs/java/springboot-extensions/) —— 各扩展点使用场景与调用顺序
+- [Java 内存模型：可见性、happens-before 与内存屏障](/docs/java/jmm-happens-before/) —— JMM、volatile、HB 推导与安全发布
+- [SpringBoot 可扩展接口](/docs/java/spring-boot/springboot-extensions/) —— 各扩展点使用场景与调用顺序
+
 
 ### 🗄️ 数据库
 
@@ -30,12 +32,12 @@ Java 后端开发相关的概念、框架与构建工具：
 
 ### 📦 中间件
 
-- [Docker 入门](/docs/middleware/docker-tutorial/) —— 核心概念与常用命令
-- [Docker 安装 MySQL](/docs/middleware/docker-mysql/)
-- [Docker 启动 Redis](/docs/middleware/docker-redis/)
-- [Docker 安装 Nginx](/docs/middleware/docker-nginx/)
-- [Docker 安装 Nacos](/docs/middleware/docker-nacos/)
-- [Docker 安装 ZooKeeper](/docs/middleware/docker-zookeeper/)
+- [Docker 入门](/docs/middleware/docker/tutorial/) —— 核心概念与常用命令
+- [Docker 安装 MySQL](/docs/middleware/docker/mysql/)
+- [Docker 启动 Redis](/docs/middleware/docker/redis/)
+- [Docker 安装 Nginx](/docs/middleware/docker/nginx/)
+- [Docker 安装 Nacos](/docs/middleware/docker/nacos/)
+- [Docker 安装 ZooKeeper](/docs/middleware/docker/zookeeper/)
 - [Nacos 集群部署](/docs/middleware/nacos-cluster/) —— MySQL 持久化 + Nginx 反代
 - [ZooKeeper 集群搭建](/docs/middleware/zookeeper-cluster/)
 - [Nginx 入门](/docs/middleware/nginx-basics/) —— 安装配置、反向代理与负载均衡
