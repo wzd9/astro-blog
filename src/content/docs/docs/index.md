@@ -13,13 +13,14 @@ description: 我的技术文档首页，涵盖 Java、数据库、中间件与�
 
 Java 后端开发相关的概念、框架与构建工具：
 
-- [Java 简介](/docs/java/) —— 技术体系、JDK 版本选择与学习路线
+<!-- - [Java 简介](/docs/java/) —— 技术体系、JDK 版本选择与学习路线 -->
 - [Java 基础](/docs/java/basics/) —— 集合框架、异常、泛型、新特性
 - [Spring Boot 入门](/docs/java/spring-boot/spring-boot/) —— 快速上手、常用注解与配置
 - [Maven](/docs/java/maven/maven/) —— 依赖管理、常用命令与镜像配置
 - [Maven 私服（Nexus）](/docs/java/maven/maven-nexus/) —— Nexus 私服安装、配置与依赖上传
-- [JVM 内存区域](/docs/java/jvm-memory/) —— 运行时数据区与各类内存溢出异常
-- [Java 内存模型：可见性、happens-before 与内存屏障](/docs/java/jmm-happens-before/) —— JMM、volatile、HB 推导与安全发布
+- [JVM 内存区域](/docs/java/advanced/jvm-memory/) —— 运行时数据区与各类内存溢出异常
+- [Java 内存模型：可见性、happens-before 与内存屏障](/docs/java/advanced/jmm-happens-before/) —— JMM、volatile、HB 推导与安全发布
+- [Java synchronized 底层原理](/docs/java/advanced/synchronized/) —— synchronized 底层原理
 - [SpringBoot 可扩展接口](/docs/java/spring-boot/springboot-extensions/) —— 各扩展点使用场景与调用顺序
 
 
