@@ -352,66 +352,7 @@ synchronized (this) {
 7.  **推导 HB**：是否存在同一把锁的 unlock → 后续 lock？
 8.  **区分规范与实现**：Java 同步语义是规范；字节码和锁优化属于 JVM 实现层。
 
-## 11. 自测题
-
-### 题目 1：两个实例是否互斥？
-
-``` java
-class Demo {
-    public synchronized void print() {
-        System.out.println("hello");
-    }
-}
-
-Demo a = new Demo();
-Demo b = new Demo();
-
-// 线程 A 调用 a.print()
-// 线程 B 调用 b.print()
-```
-
-**参考答案：** 不互斥。`a` 和 `b` 是不同实例，实例同步方法分别锁住各自的
-`this`。
-
-### 题目 2：实例同步方法与 synchronized(this) 是否互斥？
-
-``` java
-class Demo {
-    public synchronized void methodA() {}
-
-    public void methodB() {
-        synchronized (this) {}
-    }
-}
-```
-
-**参考答案：** 同一个实例上会互斥，因为两处使用的是同一个 `this`
-对象监视器。
-
-### 题目 3：静态同步方法与实例同步方法是否互斥？
-
-``` java
-class Demo {
-    public synchronized void instanceMethod() {}
-    public static synchronized void staticMethod() {}
-}
-```
-
-**参考答案：** 不会仅凭这两个 synchronized
-建立互斥。一个锁实例对象，一个锁 `Demo.class`。
-
-### 题目 4：notify 后，被通知线程能否马上执行？
-
-**参考答案：**
-不能保证。被通知线程需要等当前持锁线程释放锁，再重新竞争；获得锁后
-`wait()` 才能返回。
-
-### 题目 5：为什么 synchronized 能保证可见性？
-
-**参考答案：** 同一监视器的 unlock happens-before 后续
-lock。释放锁前的写入通过这条 HB 关系对后续获取同一把锁的线程可见。
-
-## 12. 知识结构图
+## 11. 知识结构图
 
 | 分析层次 | 核心内容 |
 | --- | --- |
@@ -421,7 +362,7 @@ lock。释放锁前的写入通过这条 HB 关系对后续获取同一把锁的
 | 锁特性 | 互斥、可重入，以及与竞争相关的实现优化 |
 | JMM | 同一把锁的 `unlock` happens-before 后续 `lock`，提供可见性和有序性保证 |
 
-## 13. 最终总结
+## 12. 最终总结
 
 理解 `synchronized` 时，可以分成三个层次：
 
