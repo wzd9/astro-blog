@@ -107,6 +107,7 @@ export default defineConfig({
 								{ label: 'JVM 内存区域', link: '/docs/java/advanced/jvm-memory/' },
 								{ label: 'Java 内存模型（JMM）', link: '/docs/java/advanced/jmm-happens-before/' },
 								{ label: 'synchronized 底层原理', link: '/docs/java/advanced/synchronized/' },
+								{ label: 'ReentrantLock 与 Condition', link: '/docs/java/advanced/reentrant-lock-condition-internals/' },
 							],
 						},
 						{
