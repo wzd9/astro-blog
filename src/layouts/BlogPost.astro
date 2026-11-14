@@ -106,10 +106,10 @@ const hasToc = headings.some((heading) => heading.depth >= 2 && heading.depth <=
 	.article-content :global(th:last-child) { border-radius: 0 9px 0 0; }
 	.article-content :global(th),
 	.article-content :global(td) { min-width: 8rem; }
-	.article-content :global(figure.frame) { position: relative; margin: 1.4rem 0 1.7rem; overflow: hidden; border: 1px solid #303b4a; border-radius: 11px; background: #0d1117; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12); }
-	.article-content :global(figure.frame figcaption.header) { display: flex; align-items: center; min-height: 2.5rem; padding: 0 0.9rem; border-bottom: 1px solid #303b4a; background: #151b23; color: #aab6c5; font: 650 0.7rem/1 var(--font-mono); letter-spacing: 0.08em; }
-	.article-content :global(figure.frame pre) { max-height: 34rem; margin: 0; padding: 1rem 1.1rem; overflow-x: auto; background: #0d1117 !important; font: 0.84rem/1.7 var(--font-mono); tab-size: 2; }
-	.article-content :global(figure.frame pre code) { font: inherit; }
+	.article-content :global(figure.frame) { position: relative; margin: 1.4rem 0 1.7rem; overflow: hidden; border: 1px solid #cbd5e1; border-radius: 11px; background: #f1f5f9; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08); }
+	.article-content :global(figure.frame figcaption.header) { display: flex; align-items: center; min-height: 2.5rem; padding: 0 0.9rem; border-bottom: 1px solid #cbd5e1; background: #e2e8f0; color: #334155; font: 650 0.7rem/1 var(--font-mono); letter-spacing: 0.08em; }
+	.article-content :global(figure.frame pre) { max-height: 34rem; margin: 0; padding: 1rem 1.1rem; overflow-x: auto; background: #f8fafc !important; color: #172033; font: 0.84rem/1.7 var(--font-mono); tab-size: 2; }
+	.article-content :global(figure.frame pre code) { color: #172033; font: inherit; }
 	.article-content :global(figure.frame .copy) { position: absolute; top: 0.43rem; right: 0.75rem; z-index: 1; }
 	.article-content :global(figure.frame .copy button) {
 		display: inline-flex; align-items: center; gap: 0.35rem;
@@ -140,7 +140,7 @@ const hasToc = headings.some((heading) => heading.depth >= 2 && heading.depth <=
 	}
 	.article-content :global(figure.frame .copy button.copied::after) { content: '已复制'; }
 	.article-content :global(figure.frame.has-line-numbers .ec-line) { display: grid; grid-template-columns: 2.5rem minmax(0, 1fr); }
-	.article-content :global(figure.frame.has-line-numbers .ec-line::before) { counter-increment: code-line; content: counter(code-line); padding-right: 0.85rem; color: #667386; text-align: right; user-select: none; }
+	.article-content :global(figure.frame.has-line-numbers .ec-line::before) { counter-increment: code-line; content: counter(code-line); padding-right: 0.85rem; color: #64748b; text-align: right; user-select: none; }
 	.article-content :global(figure.frame.has-line-numbers pre code) { counter-reset: code-line; }
 	.article-content :global(.compare-grid) { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.8rem; margin: 1.4rem 0 1.8rem; }
 	.article-content :global(.compare-card) { display: grid; align-content: start; gap: 0.65rem; padding: 1rem; border: 1px solid var(--color-border); border-radius: 11px; background: var(--color-surface); }
