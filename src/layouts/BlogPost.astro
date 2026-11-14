@@ -21,7 +21,7 @@ const hasToc = headings.some((heading) => heading.depth >= 2 && heading.depth <=
 		<div class="reading-progress" aria-hidden="true"></div>
 		<Header />
 		<main class="post-main">
-			<article class="post">
+			<article class="post" id="article-top">
 				<nav class="breadcrumb" aria-label="面包屑导航"><a href="/">首页</a><span aria-hidden="true">/</span><a href="/blog/">博客</a><span aria-hidden="true">/</span><span>{tags[0] ?? '文章'}</span></nav>
 				<header class="post-header">
 					<p class="eyebrow">{tags[0] ? tags[0].toUpperCase() : 'BLOG / NOTES'}</p>
@@ -47,6 +47,7 @@ const hasToc = headings.some((heading) => heading.depth >= 2 && heading.depth <=
 				)}
 				<div class="article-bottom">
 					<div class="article-ending"><span class="ending-mark" aria-hidden="true">✳</span><p>感谢阅读。愿这份记录能为下一次实践省下一点时间。</p></div>
+				<a class="back-to-top" href="#article-top" aria-label="返回文章开头"><span aria-hidden="true">↑</span> 回到文章开头</a>
 					<section class="comments" aria-labelledby="comments-title">
 					<div class="comments-heading">
 						<p class="comments-eyebrow">DISCUSSION</p>
@@ -152,7 +153,7 @@ const hasToc = headings.some((heading) => heading.depth >= 2 && heading.depth <=
 	.article-content :global(.route-flow) { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0.45rem; margin: 1rem 0 1.25rem; padding: 0.9rem; border: 1px solid var(--color-border); border-radius: 11px; background: var(--color-surface-muted); }
 	.article-content :global(.route-flow span) { padding: 0.35rem 0.55rem; border: 1px solid var(--color-border); border-radius: 7px; background: var(--color-surface); color: rgb(var(--gray-dark)); font-size: 0.75rem; font-weight: 650; }
 	.article-content :global(.route-flow b) { color: var(--accent); font-size: 0.83rem; }
-	.article-toc { grid-column: 3; grid-row: 1; }
+	.article-toc { grid-column: 3; grid-row: 1; align-self: stretch; }
 	.article-content :global(h2),
 	.article-content :global(h3),
 	.article-content :global(h4) { scroll-margin-top: 6rem; }
@@ -162,6 +163,7 @@ const hasToc = headings.some((heading) => heading.depth >= 2 && heading.depth <=
 	:global(body.has-toc) .article-ending { grid-column: 2; max-width: none; margin: 3rem 0 0; }
 	.article-ending p { margin: 0; color: rgb(var(--gray)); font-size: 0.82rem; }
 	.ending-mark { color: var(--accent); font-size: 1.2rem; }
+	.back-to-top { display: none; }
 	.comments { max-width: 760px; margin: 3.5rem auto 0; }
 	:global(body.has-toc) .comments { grid-column: 2; max-width: none; margin: 3.5rem 0 0; }
 	.comments-heading { margin: 0 0 1rem; }
@@ -182,6 +184,12 @@ const hasToc = headings.some((heading) => heading.depth >= 2 && heading.depth <=
 		:global(body.has-toc) .article-bottom { display: block; max-width: 760px; }
 		:global(body.has-toc) .article-ending,
 		:global(body.has-toc) .comments { max-width: none; margin-left: 0; margin-right: 0; }
+	}
+	@media (min-width: 1121px) {
+		.back-to-top { display: inline-flex; align-items: center; gap: 0.45rem; width: fit-content; margin: 1rem auto 0; padding: 0.55rem 0.85rem; border: 1px solid var(--color-border); border-radius: 8px; background: var(--color-surface); color: rgb(var(--gray-dark)); font-size: 0.82rem; text-decoration: none; transition: border-color 0.15s ease, color 0.15s ease, transform 0.15s ease; }
+		:global(body.has-toc) .back-to-top { grid-column: 2; margin-left: 0; }
+		.back-to-top:hover { transform: translateY(-1px); border-color: var(--accent); color: var(--accent); }
+		.back-to-top span { font-size: 1.1rem; line-height: 1; }
 	}
 	@media (max-width: 720px) {
 		.post-main { padding: 1.5rem 1rem 3rem; }
