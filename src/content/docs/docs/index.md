@@ -22,6 +22,7 @@ Java 后端开发相关的概念、框架与构建工具：
 - [Java 内存模型：可见性、happens-before 与内存屏障](/docs/java/advanced/jmm-happens-before/) —— JMM、volatile、HB 推导与安全发布
 - [Java synchronized 底层原理](/docs/java/advanced/synchronized/) —— synchronized 底层原理
 - [ReentrantLock 与 Condition：状态变化与队列流转](/docs/java/advanced/reentrant-lock-condition-internals/) —— 重入状态、await/signal 与 AQS 队列转换
+- [ThreadPoolExecutor：任务调度、线程回收与拒绝策略](/docs/java/advanced/thread-pool-executor-internals/) —— 任务提交、Worker 生命周期、关闭流程与拒绝策略
 - [SpringBoot 可扩展接口](/docs/java/spring-boot/springboot-extensions/) —— 各扩展点使用场景与调用顺序
 
 ### 🗄️ 数据库
