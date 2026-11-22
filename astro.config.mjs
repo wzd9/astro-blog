@@ -108,6 +108,7 @@ export default defineConfig({
 								{ label: 'Java 内存模型（JMM）', link: '/docs/java/advanced/jmm-happens-before/' },
 								{ label: 'synchronized 底层原理', link: '/docs/java/advanced/synchronized/' },
 								{ label: 'ReentrantLock 与 Condition', link: '/docs/java/advanced/reentrant-lock-condition-internals/' },
+								{ label: 'ThreadPoolExecutor 线程池原理', link: '/docs/java/advanced/thread-pool-executor-internals/' },
 							],
 						},
 						{
